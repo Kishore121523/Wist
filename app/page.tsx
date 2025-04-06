@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, provider } from '@/firebase/firebase';
+import Image from 'next/image';
+import { Line, LogoMain } from '@/public';
 
 export default function Home() {
   const router = useRouter();
@@ -27,15 +29,37 @@ export default function Home() {
 
   if (loading) return <p className="text-center mt-10">Loading...</p>;
 
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <p className="text-2xl font-semibold">Welcome to BucketBuddy 🎯</p>
-      <button
-        onClick={handleGoogleSignIn}
-        className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition"
-      >
-        Sign in with Google
-      </button>
+    <div className="min-h-screen flex justify-center items-center px-[15rem] bg-background text-foreground text-center">
+      <div className="flex flex-col justify-center items-start">
+        <h1 className="text-6xl font-semibold mb-2">WIST.</h1>
+        <p className="text-muted-foreground mb-4 text-[16px]">Plan, dream, and achieve</p>
+
+        <button
+          onClick={handleGoogleSignIn}
+          className="bg-transparent text-foreground text-[14px] px-4 py-3 rounded-[6px] font-medium cursor-pointer border border-foreground hover:bg-foreground hover:text-background transition duration-200 ease-in-out"
+        >
+          Sign in with Google
+        </button>
+      </div>
+
+        <Image 
+          src={Line}
+          alt="Hero Image"
+          width={450}
+          height={50}
+          className='mx-[5rem] mb-[3rem]'
+        />
+
+        <Image 
+        src={LogoMain}
+        alt="Hero Image"
+        width={50}
+        height={50}
+        className=''
+      />
+      
     </div>
   );
 }
