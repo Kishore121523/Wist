@@ -5,6 +5,8 @@ export interface BucketItem {
   category: string;
   priority: string;
   daysToTick: number;
-  planningNote: string;
+  planningNote?: string;
   completed: boolean;
+  isFavorite?: boolean;
+  createdAt?: Date;
 }

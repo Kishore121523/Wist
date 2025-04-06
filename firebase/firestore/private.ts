@@ -10,13 +10,27 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { BucketItem } from "@/types/bucket";
+import { serverTimestamp } from "firebase/firestore";
 
 export const createPrivateBucketList = async (
   userId: string,
-  data: BucketItem
+  bucketData: Omit<BucketItem, "id">
 ) => {
-  const ref = doc(collection(db, "users", userId, "privateBucketLists"));
-  await setDoc(ref, data);
+  const bucketRef = doc(collection(db, "users", userId, "privateBucketLists"));
+  await setDoc(bucketRef, {
+    ...bucketData,
+    createdAt: serverTimestamp(),
+    isFavorite: false,
+  });
+};
+
+export const toggleFavoriteBucketItem = async (
+  userId: string,
+  itemId: string,
+  current: boolean
+) => {
+  const ref = doc(db, "users", userId, "privateBucketLists", itemId);
+  await updateDoc(ref, { isFavorite: !current });
 };
 
 export const listenToPrivateBucketLists = (
@@ -25,7 +39,9 @@ export const listenToPrivateBucketLists = (
 ) => {
   const q = query(
     collection(db, "users", userId, "privateBucketLists"),
-    orderBy("priority")
+    orderBy("completed", "asc"), // ✅ Incomplete first
+    orderBy("isFavorite", "desc"), // ⭐ Favorites next
+    orderBy("createdAt", "desc") // 🕒 Most recent last
   );
 
   return onSnapshot(q, (snapshot) => {
@@ -55,4 +71,13 @@ export const deletePrivateBucketItem = async (
 ) => {
   const ref = doc(db, "users", userId, "privateBucketLists", itemId);
   await deleteDoc(ref);
+};
+
+export const toggleCompletedBucketItem = async (
+  userId: string,
+  itemId: string,
+  current: boolean
+) => {
+  const ref = doc(db, "users", userId, "privateBucketLists", itemId);
+  await updateDoc(ref, { completed: !current });
 };
