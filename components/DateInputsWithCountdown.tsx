@@ -36,8 +36,8 @@ export default function DateInputsWithCountdown({
 
 
   return (  
-    <div className="space-y-4 mb-8">
-      <div className="flex items-center gap-[6rem] mb-8">
+    <div className="space-y-4">
+      <div className="flex items-center gap-[6rem] mb-6">
         <div className="flex flex-col">
           <label className="text-sm mb-2">Expected Start Date</label>
           <div className="flex items-center gap-3">

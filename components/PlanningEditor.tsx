@@ -31,28 +31,28 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
     : 'border border-foreground-muted cursor-pointer rounded-[6px] text-foreground cursor-pointer text-foreground hover:bg-card-dark hover:text-background transition';
 
       const editor = useEditor({
-    extensions: [
-      StarterKit.configure({
-        history: { depth: 100, newGroupDelay: 500 },
-      }),
-      Heading.configure({ levels: [1, 2, 3] }),
-      TextAlign.configure({ types: ['heading', 'paragraph'] }),
-      TaskList,
-      TaskItem.configure({ nested: true }),
-      Blockquote,
-      Highlight.configure({
-        HTMLAttributes: {
-          class: 'bg-yellow-600 text-black px-1 rounded-sm',
+        extensions: [
+          StarterKit.configure({
+            history: { depth: 100, newGroupDelay: 500 },
+          }),
+          Heading.configure({ levels: [1, 2, 3] }),
+          TextAlign.configure({ types: ['heading', 'paragraph'] }),
+          TaskList,
+          TaskItem.configure({ nested: true }),
+          Blockquote,
+          Highlight.configure({
+            HTMLAttributes: {
+              class: 'bg-yellow-600 text-black px-1 rounded-sm',
+            },
+          }),
+        ],
+        content, // initial content
+        onUpdate({ editor }) {
+          onChange(editor.getHTML());
         },
-      }),
-    ],
-    content, // initial content
-    onUpdate({ editor }) {
-      onChange(editor.getHTML());
-    },
-  });
+      });
 
-  // 🔁 This effect ensures updated content is set into editor after it mounts
+  // This effect ensures updated content is set into editor after it mounts
   useEffect(() => {
     if (editor && content !== editor.getHTML()) {
       editor.commands.setContent(content);
@@ -154,15 +154,15 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
           </Button>
         </Tooltip>
         
-      <Tooltip label="Blockquote">
-        <Button
-          onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          className={getBtnStyle(editor.isActive('blockquote'))}
-          size="icon"
-        >
-          <Quote size={16} />
-        </Button>
-      </Tooltip>
+        <Tooltip label="Blockquote">
+          <Button
+            onClick={() => editor.chain().focus().toggleBlockquote().run()}
+            className={getBtnStyle(editor.isActive('blockquote'))}
+            size="icon"
+          >
+            <Quote size={16} />
+          </Button>
+        </Tooltip>
 
         <Tooltip label="Highlight">
           <Button
@@ -205,7 +205,7 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
         </Tooltip>
       </div>
     
-      <div className="text-xs text-muted-foreground mb-2">
+      <div className="text-xs text-muted-foreground mt-4 mb-2">
         Current Block: <span className="font-medium">{getActiveHeading()}</span>
         {editor.isActive('bold') && ' | Bold'}
         {editor.isActive('italic') && ' | Italic'}
