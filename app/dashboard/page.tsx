@@ -20,7 +20,7 @@ import {
 
 import { List, Star, CheckCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { EmptyList } from '@/public';
+import { EmptyList, FavList, CompletedList } from '@/public';
 import Image from 'next/image';
 
 
@@ -145,21 +145,21 @@ const itemVariants = {
           >
             <ToggleGroupItem
               value="all"
-              className="flex items-center justify-center gap-1 min-w-[2rem] px-2 py-2 text-sm border border-border rounded-[6px] data-[state=on]:bg-foreground data-[state=on]:text-background"
+              className="flex items-center justify-center gap-1 min-w-[2rem] px-2 py-2 text-[12px] border border-border rounded-[6px] data-[state=on]:bg-foreground data-[state=on]:text-background"
             >
               <List size={14} />
               All
             </ToggleGroupItem>
             <ToggleGroupItem
               value="favorites"
-              className="flex items-center justify-center gap-1 min-w-[2rem] px-6 py-2 text-sm border border-border rounded-[6px] data-[state=on]:bg-foreground data-[state=on]:text-background hover:cursor-pointer hover:bg-foreground hover:text-background transition"
+              className="flex items-center justify-center gap-1 min-w-[2rem] px-6 py-2 text-[12px] border border-border rounded-[6px] data-[state=on]:bg-foreground data-[state=on]:text-background hover:cursor-pointer hover:bg-foreground hover:text-background transition"
             >
               <Star size={14} />
               Favorites
             </ToggleGroupItem>
             <ToggleGroupItem
               value="completed"
-              className="flex justify-center items-center gap-1 min-w-[2rem] px-8 py-2 text-sm border border-border rounded-[6px] data-[state=on]:bg-foreground data-[state=on]:text-background hover:cursor-pointer hover:bg-foreground hover:text-background transition"
+              className="flex justify-center items-center gap-1 min-w-[2rem] px-8 py-2 text-[12px] border border-border rounded-[6px] data-[state=on]:bg-foreground data-[state=on]:text-background hover:cursor-pointer hover:bg-foreground hover:text-background transition"
             >
               <CheckCircle size={14} />
               Completed
@@ -169,54 +169,74 @@ const itemVariants = {
 
         <h2 className="text-xl font-bold mb-4">Your WIST.</h2>
 
-        <AnimatePresence mode="wait">
-          {filteredItems.length > 0 ? (
-            <motion.div
-              key={filter}
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-            >
-              {filteredItems.map((item) => (
-                <motion.div
-                  key={item.id}
-                  variants={itemVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
-                  layout
-                >
-                  <BucketListCard
-                    item={item}
-                    user={user}
-                    onEdit={openEditModal}
-                    onDelete={(item) => setConfirmDeleteItem(item)}
-                  />
-                </motion.div>
-              ))}
-            </motion.div>
-          ) : (
-            <motion.div
-                key="empty"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                transition={{ duration: 0.3 }}
-                className="flex flex-col items-center justify-center w-full h-[400px] text-center text-muted-foreground"
+    <AnimatePresence mode="wait">
+        {filteredItems.length > 0 ? (
+          <motion.div
+            key={filter}
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+          >
+            {filteredItems.map((item) => (
+              <motion.div
+                key={item.id}
+                variants={itemVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                layout
               >
-                <Image 
-                  src={EmptyList}
-                  alt="Empty State"
-                  width={270}
-                  height={270}
-                  className="mb-4 opacity-80"
+                <BucketListCard
+                  item={item}
+                  user={user}
+                  onEdit={openEditModal}
+                  onDelete={(item) => setConfirmDeleteItem(item)}
                 />
-                <p className="text-lg font-medium">Looks like your list is empty!</p>
-                <p className="text-sm">Add your first WIST</p>
               </motion.div>
-          )}
-        </AnimatePresence>
+            ))}
+          </motion.div>
+        ) : (
+          <motion.div
+            key={`empty-${filter}`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.3 }}
+            className="flex flex-col items-center justify-center w-full h-[350px] text-center text-muted-foreground"
+          >
+            <Image
+              src={
+                filter === 'favorites'
+                  ? FavList
+                  : filter === 'completed'
+                  ? CompletedList
+                  : EmptyList
+              }
+              alt="Empty State"
+              width={270}
+              height={270}
+              className="mb-4 opacity-80"
+            />
+
+            <p className="text-lg font-medium">
+              {filter === 'favorites'
+                ? 'No favorites yet!'
+                : filter === 'completed'
+                ? 'Nothing completed yet!'
+                : 'Looks like your list is empty!'}
+            </p>
+            <p className="text-[12px]">
+              {filter === 'favorites'
+                ? 'Mark a WIST as favorite to see it here.'
+                : filter === 'completed'
+                ? 'Tick off a WIST to mark it as done.'
+                : 'Add your first WIST to begin!'}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
 
 
       </div>

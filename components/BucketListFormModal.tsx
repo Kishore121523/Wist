@@ -17,6 +17,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
+import CategorySelect from './CategorySelect';
 
 interface Props {
   isOpen: boolean;
@@ -27,6 +28,7 @@ interface Props {
 export default function BucketListFormModal({ isOpen, onClose, existingItem }: Props) {
   const { user } = useAuth();
   const isEdit = !!existingItem;
+
 
   const [form, setForm] = useState<BucketItem>({
     name: '',
@@ -102,7 +104,7 @@ export default function BucketListFormModal({ isOpen, onClose, existingItem }: P
       <DialogContent className="bg-card rounded-[6px] text-card-foreground max-w-lg [&>button]:hidden">
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold">
-            {isEdit ? `Edit Bucket List Item : ${form.name}` : 'Add Bucket List Item'}
+            {isEdit ? 'Edit WIST.' : 'Add WIST.'}
           </DialogTitle>
         </DialogHeader>
 
@@ -121,12 +123,10 @@ export default function BucketListFormModal({ isOpen, onClose, existingItem }: P
             placeholder="Description"
             className='w-full border border-border rounded-[6px] focus-visible:outline-none focus-visible:ring-0 focus-visible:border-border focus:outline-none focus:ring-0'
           />
-          <Input
-            name="category"
+
+          <CategorySelect
             value={form.category}
-            onChange={handleChange}
-            placeholder="Category"
-            className='w-full border border-border rounded-[6px] focus-visible:outline-none focus-visible:ring-0 focus-visible:border-border focus:outline-none focus:ring-0'
+            onChange={(val) => setForm({ ...form, category: val })}
           />
 
           <Select value={form.priority} onValueChange={handlePriorityChange}>
