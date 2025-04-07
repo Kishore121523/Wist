@@ -5,7 +5,6 @@ export interface BucketItem {
   category: string;
   priority: "High" | "Medium" | "Low";
   priorityValue: number;
-  planningNote?: string;
   completed: boolean;
   isFavorite?: boolean;
   createdAt?: Date;
