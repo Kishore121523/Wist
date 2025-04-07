@@ -6,6 +6,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-card-dark: var(--card-dark);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -46,6 +47,7 @@
 :root {
   --background: oklch(0.98 0 0); /* almost white */
   --foreground: oklch(0.25 0.01 270); /* soft black (#2e2e2e) */
+  --card-dark: #373737;
 
   --card: oklch(1 0 0); /* pure white */
   --card-foreground: oklch(0.25 0.01 270);
@@ -66,6 +68,7 @@
 .dark {
   --background: oklch(0.15 0.01 270);
   --foreground: oklch(0.98 0 0);
+  --card-dark: oklch(29.36% 0.004 19.63);
 
   --card: oklch(0.22 0.01 270);
   --card-foreground: oklch(0.98 0 0);
@@ -98,4 +101,55 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.ProseMirror {
+  padding: 0.5rem;
+  min-height: 300px;
+  line-height: 1.5;
+  outline: none;
+}
+
+.ProseMirror p:empty::before {
+  content: " ";
+  display: inline-block;
+  height: 1rem;
+  color: transparent;
+}
+
+.editor-content h1 {
+  font-size: 1.875rem; /* text-3xl */
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.editor-content h2 {
+  font-size: 1.5rem; /* text-2xl */
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.editor-content h3 {
+  font-size: 1.25rem; /* text-xl */
+  font-weight: 500;
+  margin-bottom: 0.4rem;
+}
+
+.editor-content p {
+  font-size: 1rem; /* base */
+  margin-bottom: 0.25rem;
+}
+
+.editor-content blockquote {
+  border-left: 4px solid #999;
+  padding-left: 1rem;
+  margin: 1rem 0;
+  color: #555;
+  font-style: italic;
+}
+
+.editor-content mark {
+  background-color: #fff4a3b9;
+  padding: 0.1rem 0.25rem;
+  border-radius: 2px;
 }
