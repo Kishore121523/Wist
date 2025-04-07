@@ -8,6 +8,16 @@ import {
   updatePrivateBucketItem,
 } from '@/firebase/firestore/private';
 
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
+
 interface Props {
   isOpen: boolean;
   onClose: () => void;
@@ -23,7 +33,7 @@ export default function BucketListFormModal({ isOpen, onClose, existingItem }: P
     description: '',
     category: '',
     priority: 'Medium',
-    daysToTick: 0,
+    priorityValue: 2,
     completed: false,
   });
 
@@ -31,22 +41,23 @@ export default function BucketListFormModal({ isOpen, onClose, existingItem }: P
     if (existingItem) {
       setForm(existingItem);
     } else {
-      console.log(existingItem)
       setForm({
         name: '',
         description: '',
         category: '',
         priority: 'Medium',
-        daysToTick: 0,
+        priorityValue: 2,
         completed: false,
       });
     }
   }, [existingItem]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handlePriorityChange = (value: 'High' | 'Medium' | 'Low') => {
+    setForm({ ...form, priority: value });
   };
 
   const handleSubmit = async () => {
@@ -61,80 +72,90 @@ export default function BucketListFormModal({ isOpen, onClose, existingItem }: P
         description: '',
         category: '',
         priority: 'Medium',
-        daysToTick: 0,
+        priorityValue: 2,
         completed: false,
+
       });
     }
 
     onClose();
   };
 
-  if (!isOpen) return null;
+  const handleClose = () => {
+  if (existingItem) {
+    setForm(existingItem); // reset to original
+  } else {
+    setForm({
+      name: '',
+      description: '',
+      category: '',
+      priority: 'Medium',
+      priorityValue: 2,
+      completed: false,
+    });
+  }
+  onClose(); // close the modal
+};
 
   return (
-    <div className="fixed inset-0 bg-black/30 backdrop-blur-xs flex items-center justify-center z-50">
-      <div className="bg-card text-card-foreground p-6 rounded-[6px] shadow-lg w-full max-w-lg">
-        <h2 className="text-lg font-semibold mb-4">{isEdit ? `Edit Bucket List Item - ${form.name}` : 'Add Bucket List Item'}</h2>
+    <Dialog open={isOpen} onOpenChange={handleClose} >
+      <DialogContent className="bg-card rounded-[6px] text-card-foreground max-w-lg [&>button]:hidden">
+        <DialogHeader>
+          <DialogTitle className="text-lg font-semibold">
+            {isEdit ? `Edit Bucket List Item : ${form.name}` : 'Add Bucket List Item'}
+          </DialogTitle>
+        </DialogHeader>
 
-        <div className="space-y-4 mb-6">
-          <input
+        <div className="space-y-4">
+          <Input
             name="name"
             value={form.name}
             onChange={handleChange}
             placeholder="Name"
-            className="w-full p-2 border border-border rounded-[6px] bg-background"
+            className='w-full border border-border rounded-[6px] focus-visible:border-border focus-visible:outline-none focus-visible:ring-0 focus:outline-none focus:ring-0'
           />
-          <input
+          <Input
             name="description"
             value={form.description}
             onChange={handleChange}
             placeholder="Description"
-            className="w-full p-2 border border-border rounded-[6px] bg-background"
+            className='w-full border border-border rounded-[6px] focus-visible:outline-none focus-visible:ring-0 focus-visible:border-border focus:outline-none focus:ring-0'
           />
-          <input
+          <Input
             name="category"
             value={form.category}
             onChange={handleChange}
             placeholder="Category"
-            className="w-full p-2 border border-border rounded-[6px] bg-background"
+            className='w-full border border-border rounded-[6px] focus-visible:outline-none focus-visible:ring-0 focus-visible:border-border focus:outline-none focus:ring-0'
           />
-          <select
-            name="priority"
-            value={form.priority}
-            onChange={handleChange}
-            className="w-full p-2 border border-border rounded-[6px] bg-background"
-          >
-            <option>Low</option>
-            <option>Medium</option>
-            <option>High</option>
-          </select>
-          <input
-            type="number"
-            name="daysToTick"
-            value={form.daysToTick}
-            onChange={handleChange}
-            placeholder="Days to tick off"
-            className="w-full p-2 border border-border rounded-[6px] bg-background"
-          />
+
+          <Select value={form.priority} onValueChange={handlePriorityChange}>
+            <SelectTrigger className="w-full border border-border rounded-[6px] cursor-pointer focus-visible:outline-none focus-visible:ring-0 focus-visible:border-border focus:outline-none focus:ring-0">
+              <SelectValue placeholder="Select priority" />
+            </SelectTrigger>
+            <SelectContent className="w-full border border-border rounded-[6px] focus-visible:outline-none focus-visible:ring-0 focus-visible:border-border focus:outline-none focus:ring-0">
+              <SelectItem className='cursor-pointer' value="Low">Low</SelectItem>
+              <SelectItem className='cursor-pointer' value="Medium">Medium</SelectItem>
+              <SelectItem className='cursor-pointer' value="High">High</SelectItem>
+            </SelectContent>
+          </Select>
+
         </div>
 
-        <div className="flex justify-between items-center">
-          <div className="ml-auto flex">
-            <button
-              onClick={onClose}
-              className="text-sm border border-foreground text-foregroun cursor-pointer mr-2 px-4 py-2 rounded-[6px] text-[12px]"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleSubmit}
-              className="text-sm px-4 py-2 text-[12px] rounded-[6px] bg-foreground text-background hover:border-gray-100 transition duration-200 ease-in-out cursor-pointer"
-            >
-              {isEdit ? 'Update' : 'Add'}
-            </button>
-          </div>
+        <div className="flex justify-end gap-4">
+          <Button
+            onClick={handleClose}
+            className="border border-foreground cursor-pointer text-foreground px-4 py-2 rounded-[6px] text-[12px] font-medium hover:bg-gray-100 transition"
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleSubmit}
+            className="border border-foreground cursor-pointer text-foreground px-4 py-2 rounded-[6px] text-[12px] font-medium hover:bg-foreground hover:text-background transition">
+            {isEdit ? 'Update' : 'Add'}
+          </Button>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

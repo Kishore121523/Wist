@@ -67,7 +67,6 @@ export default function BucketDetailPage() {
       <div className="space-y-3 text-sm">
         <p><strong>Category:</strong> {item.category}</p>
         <p><strong>Priority:</strong> {item.priority}</p>
-        <p><strong>Days to Tick:</strong> {item.daysToTick}</p>
         <p><strong>Planning Notes:</strong> {item.planningNote}</p>
         <p><strong>Status:</strong> {item.completed ? '✅ Completed' : '❌ Not yet'}</p>
       </div>

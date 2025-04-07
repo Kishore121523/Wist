@@ -3,8 +3,8 @@ export interface BucketItem {
   name: string;
   description: string;
   category: string;
-  priority: string;
-  daysToTick: number;
+  priority: "High" | "Medium" | "Low";
+  priorityValue: number;
   planningNote?: string;
   completed: boolean;
   isFavorite?: boolean;

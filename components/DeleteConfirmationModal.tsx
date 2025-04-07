@@ -1,5 +1,13 @@
 'use client';
 
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+
 interface DeleteConfirmModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -7,24 +15,40 @@ interface DeleteConfirmModalProps {
   itemName: string;
 }
 
-export default function DeleteConfirmModal({ isOpen, onClose, onConfirm, itemName }: DeleteConfirmModalProps) {
-  if (!isOpen) return null;
-
+export default function DeleteConfirmModal({
+  isOpen,
+  onClose,
+  onConfirm,
+  itemName,
+}: DeleteConfirmModalProps) {
   return (
-    <div className="fixed inset-0 bg-black/30 backdrop-blur-xs flex items-center justify-center z-50">
-      <div className="bg-card text-card-foreground p-6 rounded-[6px] shadow-lg w-full max-w-sm">
-        <h2 className="text-lg font-semibold mb-1">Delete “{itemName}”?</h2>
-        <p className="text-sm text-muted-foreground mb-5">This action cannot be undone.</p>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="bg-card rounded-[6px] text-card-foreground min-w-[20rem] [&>button]:hidden">
+        <DialogHeader>
+          <DialogTitle className="text-lg font-semibold">
+            Delete “{itemName}”?
+          </DialogTitle>
+        </DialogHeader>
+
+        <p className="text-sm text-muted-foreground mt-[-10px]">
+          This action cannot be undone.
+        </p>
+
         <div className="flex justify-end gap-4">
-          <button onClick={onClose} className="text-sm border border-foreground text-foregroun cursor-pointer px-4 py-2 rounded-[6px] text-[12px]">Cancel</button>
-          <button
+          <Button
+            onClick={onClose}
+            className="border border-foreground cursor-pointer text-foreground px-4 py-2 rounded-[6px] text-[12px] font-medium hover:bg-gray-100 transition"
+          >
+            Cancel
+          </Button>
+          <Button
             onClick={onConfirm}
-            className="text-sm px-4 py-2 text-[12px] rounded-[6px] bg-foreground text-background hover:border-gray-100 transition duration-200 ease-in-out cursor-pointer"
+            className="border border-foreground cursor-pointer text-foreground px-4 py-2 rounded-[6px] text-[12px] font-medium hover:bg-foreground hover:text-background transition"
           >
             Delete
-          </button>
+          </Button>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

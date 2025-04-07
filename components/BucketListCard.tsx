@@ -1,7 +1,7 @@
 'use client';
 
 import { BucketItem } from '@/types/bucket';
-import { Pencil, Trash, Star, CheckCircle, Circle, ArrowUpRight, BadgeCheck } from 'lucide-react';
+import { Pencil, Trash, Star, CheckCircle, Circle, ArrowUpRight, BadgeCheck, Calendar } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { toggleFavoriteBucketItem, toggleCompletedBucketItem } from '@/firebase/firestore/private';
@@ -44,9 +44,9 @@ const formatDate = (date?: any) => {
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.95 }}
+      initial={{ opacity: 0  }}
+      animate={{ opacity: 1  }}
+      exit={{ opacity: 0, }}
       transition={{ duration: 0.2 }}
       className={cardStyle}
     >
@@ -59,13 +59,15 @@ const formatDate = (date?: any) => {
         </Link>
 
             <p className="text-sm text-muted-foreground mb-1">{item.description}</p>
-
+          <div className="flex flex-wrap gap-2 mt-1">
             {item.createdAt && (
               <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded border border-gray-300 text-gray-500">
+                <Calendar size={12} className="text-gray-500" />
                 {formatDate(item.createdAt)}
               </span>
             )}
-            <span className={`inline-flex ml-2 items-center gap-1 text-xs px-2 py-0.5 rounded ${badgeColor}`}>
+
+            <span className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded ${badgeColor}`}>
             {item.completed ? (
               <>
                 <BadgeCheck size={14} className="text-black" />
@@ -75,6 +77,8 @@ const formatDate = (date?: any) => {
               `${item.priority} Priority`
             )}
           </span>
+
+          </div>
       </div>
 
       <div className="flex gap-3 ml-4">
