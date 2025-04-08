@@ -12,10 +12,10 @@ const EmptyImage = ({filter}:EmptyImageProps ) => {
   return (
       <motion.div
                 key={`empty-${filter}`}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                transition={{ duration: 0.3 }}
+                exit={{ opacity: 0, y: 40 }}
+                transition={{ duration: 0.3, ease: 'easeOut' }}
                 className="flex flex-col items-center justify-center w-full h-[350px] text-center text-muted-foreground"
               >
                 <Image

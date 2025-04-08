@@ -117,30 +117,30 @@
   color: transparent;
 }
 
-.editor-content h1 {
+.tiptap h1 {
   font-size: 1.875rem; /* text-3xl */
   font-weight: 700;
   margin-bottom: 0.75rem;
 }
 
-.editor-content h2 {
+.tiptap h2 {
   font-size: 1.5rem; /* text-2xl */
   font-weight: 600;
   margin-bottom: 0.5rem;
 }
 
-.editor-content h3 {
+.tiptap h3 {
   font-size: 1.25rem; /* text-xl */
   font-weight: 500;
   margin-bottom: 0.4rem;
 }
 
-.editor-content p {
+.tiptap p {
   font-size: 1rem; /* base */
   margin-bottom: 0.25rem;
 }
 
-.editor-content blockquote {
+.tiptap blockquote {
   border-left: 4px solid #999;
   padding-left: 1rem;
   margin: 1rem 0;
@@ -148,8 +148,50 @@
   font-style: italic;
 }
 
-.editor-content mark {
+.tiptap mark {
   background-color: #fff4a3b9;
   padding: 0.1rem 0.25rem;
   border-radius: 2px;
+}
+
+.tiptap [data-type="taskList"] {
+  padding-left: 0;
+  list-style: none;
+  margin: 1rem 0;
+}
+
+.tiptap [data-type="taskList"] > li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.tiptap [data-type="taskList"] > li > label {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.tiptap [data-type="taskList"] > li > div {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+}
+.tiptap [data-type="taskList"] > li > div p {
+  margin: 0;
+  padding: 0;
+}
+
+.tiptap [data-type="taskList"] > li[data-checked="true"] > div p {
+  text-decoration: line-through;
+  color: oklch(65% 0 0); /* Light muted tone */
+}
+
+/* Style checkbox (optional) */
+.tiptap input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+  accent-color: var(--foreground);
 }

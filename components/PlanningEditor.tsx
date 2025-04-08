@@ -170,7 +170,7 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
             className={getBtnStyle(editor.isActive('highlight'))}
             size="icon"
           >
-                <Highlighter size={16} />
+              <Highlighter size={16} />
           </Button>
         </Tooltip>
 
@@ -213,7 +213,7 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
 
       <EditorContent
         editor={editor}
-        className="min-h-[300px] h-[350px] max-h-[500px] overflow-y-auto outline-none rounded-md px-3 py-2 editor-content"
+        className="tiptap min-h-[300px] h-[350px] max-h-[500px] overflow-y-auto outline-none rounded-md px-3 py-2"
       />
     </div>
   );

@@ -61,7 +61,7 @@ export default function BucketListCard({ item, user, onEdit, onDelete }: BucketL
         </Link>
 
         <div className="max-w-2xl"> {/* You can adjust max-w-sm/md/lg/xl based on layout */}
-          <p className={`text-sm text-muted-foreground mb-3 break-words ${item.completed ? 'line-through' : ''}`}>
+          <p className={`text-[13px] leading-tight text-muted-foreground mb-3 break-words ${item.completed ? 'line-through' : ''}`}>
             {item.description}
           </p>
         </div>
