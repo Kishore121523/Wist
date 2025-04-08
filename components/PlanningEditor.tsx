@@ -46,7 +46,7 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
             },
           }),
         ],
-        content, // initial content
+        content,
         onUpdate({ editor }) {
           onChange(editor.getHTML());
         },

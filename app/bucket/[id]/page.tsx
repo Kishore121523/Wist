@@ -80,24 +80,25 @@ export default function BucketDetailPage() {
     });
 
     setSaved(true);
-    setTimeout(() => setSaved(false), 2000); // Show message for 2s
+    setTimeout(() => setSaved(false), 2000);
   };
 
   if (!item) return <Loader />;
 
   return (
     <div className="min-h-screen px-[10rem] py-24 bg-background text-foreground">
+      
       {/* Top bar */}
       <div className="flex justify-between items-center mb-8">
         <Button
           onClick={() => router.back()}
-          className="border border-foreground cursor-pointer text-foreground px-4 py-2 rounded-[6px] text-[12px] font-medium hover:bg-foreground hover:text-background transition"
+          className="border border-foreground cursor-pointer text-foreground px-4 py-2 rounded-[6px] text-[12px] font-medium hover:bg-card-dark hover:text-background transition"
         >
           Go back
         </Button>
 
         <Button
-          className="border border-foreground cursor-pointer text-foreground px-4 py-2 rounded-[6px] text-[12px] font-medium hover:bg-foreground hover:text-background transition"
+          className="border border-foreground cursor-pointer text-foreground px-4 py-2 rounded-[6px] text-[12px] font-medium hover:bg-card-dark hover:text-background transition"
           onClick={() => setEditModalOpen(true)}
         >
           <Pencil className='mx-[-2px] h-[2px]' />Edit
@@ -105,18 +106,18 @@ export default function BucketDetailPage() {
       </div>
 
       {/* List Card Details  */}
-      <div className="border border-border rounded-[8px] p-6 mb-8 bg-card-dark shadow-sm transition flex justify-between items-center">
-        <div className="opacity-90">
-            <h1 className="text-4xl font-bold text-background">{item.name}</h1>
-            <p className="text-background mb-3">{item.description}</p>
+      <div className="border border-border rounded-[8px] p-8 mb-8 bg-card-dark shadow-sm transition flex justify-between items-center">
+        <div className="opacity-90 max-w-[calc(100%-140px)]">
+          <h1 className="text-4xl font-bold text-background mb-1">{item.name}</h1>
+          <p className="text-background mb-3 text-md break-words">{item.description}</p>
 
-            <div className="flex flex-wrap gap-2 text-background">
-              <Badge className='border border-border rounded-[6px]'>{item.category}</Badge>
-              <Badge className='border border-border rounded-[6px]'>{item.priority} Priority</Badge>
-            </div>
+          <div className="flex flex-wrap gap-2 text-background">
+            <Badge className='border border-border rounded-[6px]'>{item.category}</Badge>
+            <Badge className='border border-border rounded-[6px]'>{item.priority} Priority</Badge>
+          </div>
         </div>
-        
-        <div className="w-[100px] h-[100px] rounded-md overflow-hidden flex items-center justify-center mr-8 p-2">
+
+        <div className="w-[100px] h-[100px] rounded-md overflow-hidden flex items-center justify-center ml-6 mr-3">
           <Image
             src={randomImage}
             alt="Hero"
@@ -145,11 +146,12 @@ export default function BucketDetailPage() {
           onChange={(value) => setDetails({ ...details, planningNotes: value })}
         />
       </div>
-
+      
+      {/* Save button */}
       <div className="flex items-center gap-3">
       <Button
         onClick={handleSave}
-        className="bg-foreground text-background px-4 py-2 rounded-[6px] text-[12px] font-medium cursor-pointer hover:bg-foreground hover:text-background transition"
+        className="bg-card-dark text-background px-4 py-2 rounded-[6px] text-[12px] font-medium cursor-pointer hover:bg-foreground hover:text-background transition"
       >
         Save Changes
       </Button>

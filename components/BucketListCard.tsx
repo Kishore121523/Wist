@@ -54,17 +54,19 @@ export default function BucketListCard({ item, user, onEdit, onDelete }: BucketL
     >
       <div className="flex-1">
         <Link href={`/bucket/${item.id}`} className="group inline-flex items-center">
-          <h3 className={`text-lg font-semibold capitalize text-foreground cursor-pointer transition relative inline-flex items-center gap-[5px] hover:underline underline-offset-4 ${item.completed ? 'line-through' : ''}`}>
+          <h3 className={`text-xl font-semibold capitalize text-foreground cursor-pointer transition relative inline-flex items-center gap-[5px] hover:underline underline-offset-4 ${item.completed ? 'line-through' : ''}`}>
             {item.name}
             <ArrowUpRight size={14} className="opacity-0 group-hover:opacity-100 transition duration-150 text-foreground" />
           </h3>
         </Link>
 
-        <p className={`text-sm text-muted-foreground mb-1 ${item.completed ? 'line-through' : ''}`}>
-          {item.description}
-        </p>
+        <div className="max-w-2xl"> {/* You can adjust max-w-sm/md/lg/xl based on layout */}
+          <p className={`text-sm text-muted-foreground mb-3 break-words ${item.completed ? 'line-through' : ''}`}>
+            {item.description}
+          </p>
+        </div>
 
-        <div className="flex flex-wrap gap-2 mt-1">
+        <div className="flex flex-wrap gap-2">
           {item.createdAt && (
             <span className={`inline-flex items-center gap-1 text-[12px] px-2 py-0.5 rounded border border-gray-300 text-gray-500 
             ${item.completed ? 'line-through' : ''}`}>
@@ -104,10 +106,10 @@ export default function BucketListCard({ item, user, onEdit, onDelete }: BucketL
             }
           }}
           className={`transition cursor-pointer ${
-            item.isFavorite ? 'text-black' : 'text-muted-foreground hover:text-foreground'
+            item.isFavorite ? 'text-card-dark' : 'text-muted-foreground hover:text-foreground'
           }`}
         >
-          {item.isFavorite ? <Star fill="black" size={18} /> : <Star size={18} />}
+          {item.isFavorite ? <Star fill="card-dark" size={18} /> : <Star size={18} />}
         </motion.button>
 
         <motion.button

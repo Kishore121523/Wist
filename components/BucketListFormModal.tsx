@@ -99,6 +99,8 @@ export default function BucketListFormModal({ isOpen, onClose, existingItem }: P
   onClose(); // close the modal
 };
 
+const classNameInput = 'w-full border border-border rounded-[6px] focus-visible:border-border focus-visible:outline-none focus-visible:ring-0 focus:outline-none focus:ring-0';
+
   return (
     <Dialog open={isOpen} onOpenChange={handleClose} >
       <DialogContent className="bg-card rounded-[6px] text-card-foreground max-w-lg [&>button]:hidden">
@@ -114,14 +116,14 @@ export default function BucketListFormModal({ isOpen, onClose, existingItem }: P
             value={form.name}
             onChange={handleChange}
             placeholder="Name"
-            className='w-full border border-border rounded-[6px] focus-visible:border-border focus-visible:outline-none focus-visible:ring-0 focus:outline-none focus:ring-0'
+            className={classNameInput}
           />
           <Input
             name="description"
             value={form.description}
             onChange={handleChange}
             placeholder="Description"
-            className='w-full border border-border rounded-[6px] focus-visible:outline-none focus-visible:ring-0 focus-visible:border-border focus:outline-none focus:ring-0'
+            className={classNameInput}
           />
 
           <CategorySelect
@@ -151,7 +153,7 @@ export default function BucketListFormModal({ isOpen, onClose, existingItem }: P
           </Button>
           <Button
             onClick={handleSubmit}
-            className="border border-foreground cursor-pointer text-foreground px-4 py-2 rounded-[6px] text-[12px] font-medium hover:bg-foreground hover:text-background transition">
+            className="border border-foreground cursor-pointer text-foreground px-4 py-2 rounded-[6px] text-[12px] font-medium hover:bg-card-dark hover:text-background transition">
             {isEdit ? 'Update' : 'Add'}
           </Button>
         </div>

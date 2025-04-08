@@ -15,13 +15,13 @@ import BucketListCard from '@/components/BucketListCard';
 import DeleteConfirmModal from '@/components/DeleteConfirmationModal';
 import {
   ToggleGroup,
-  ToggleGroupItem,
 } from '@/components/ui/toggle-group';
 
 import { List, Star, CheckCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { EmptyList, FavList, CompletedList } from '@/public';
-import Image from 'next/image';
+import EmptyImage from '@/components/EmptyImage';
+import Loader from '@/components/Loader';
+import ViewToggleButton from '@/components/ToggleButton';
 
 
 
@@ -108,32 +108,34 @@ const itemVariants = {
   },
 };
 
+  if (loading) return <Loader />;
 
   return (
     <div className="min-h-screen flex justify-center items-start px-[10rem] py-24 bg-background text-foreground">
       <div className="flex flex-col w-full max-w-4xl">
-        <div className="flex justify-between items-center mb-10">
+
+        {/* Head*/}
+        <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-semibold text-muted-foreground capitalize">
             {getGreeting()},
             <p className="text-4xl text-foreground">{user?.displayName || user?.email}</p>
           </h1>
-          <div className="flex gap-[1.5rem]">
+          <div className="flex gap-[1rem]">
             <button
               onClick={openNewItemModal}
-              className="bg-foreground text-background px-4 py-2 rounded-[6px] text-[12px] font-medium cursor-pointer border border-foreground hover:border-gray-100 transition duration-200 ease-in-out"
-            >
+              className="bg-card-dark text-background px-4 py-2 rounded-[6px] text-[12px] font-medium cursor-pointer border border-foreground hover:bg-foreground transition duration-200 ease-in-out">
               Add a WIST
             </button>
 
             <button
               onClick={handleSignOut}
-              className="border border-foreground cursor-pointer text-foreground px-4 py-2 rounded-[6px] text-[12px] font-medium hover:bg-foreground hover:text-background transition"
-            >
+              className="border border-foreground cursor-pointer text-foreground px-4 py-2 rounded-[6px] text-[12px] font-medium hover:bg-card-dark hover:text-background transition">
               Sign Out
             </button>
           </div>
         </div>
 
+        {/* Filter */}
         <div className="mb-6">
           <ToggleGroup
             type="single"
@@ -143,102 +145,59 @@ const itemVariants = {
             }}
             className="flex gap-3"
           >
-            <ToggleGroupItem
-              value="all"
-              className="flex items-center justify-center gap-1 min-w-[2rem] px-2 py-2 text-[12px] border border-border rounded-[6px] data-[state=on]:bg-foreground data-[state=on]:text-background"
-            >
-              <List size={14} />
-              All
-            </ToggleGroupItem>
-            <ToggleGroupItem
-              value="favorites"
-              className="flex items-center justify-center gap-1 min-w-[2rem] px-6 py-2 text-[12px] border border-border rounded-[6px] data-[state=on]:bg-foreground data-[state=on]:text-background hover:cursor-pointer hover:bg-foreground hover:text-background transition"
-            >
-              <Star size={14} />
-              Favorites
-            </ToggleGroupItem>
-            <ToggleGroupItem
-              value="completed"
-              className="flex justify-center items-center gap-1 min-w-[2rem] px-8 py-2 text-[12px] border border-border rounded-[6px] data-[state=on]:bg-foreground data-[state=on]:text-background hover:cursor-pointer hover:bg-foreground hover:text-background transition"
-            >
-              <CheckCircle size={14} />
-              Completed
-            </ToggleGroupItem>
+              <ViewToggleButton value="all">
+                <List size={14} />
+                All
+              </ViewToggleButton>
+
+              <ViewToggleButton value="favorites">
+                <Star size={14} />
+                Favorites
+              </ViewToggleButton>
+
+              <ViewToggleButton value="completed">
+                <CheckCircle size={14} />
+                Completed
+              </ViewToggleButton>
+
           </ToggleGroup>
         </div>
+        
+        {/* Bucket List Items */}
+        <h2 className="text-xl font-bold mb-3">Your WIST.</h2>
 
-        <h2 className="text-xl font-bold mb-4">Your WIST.</h2>
-
-    <AnimatePresence mode="wait">
-        {filteredItems.length > 0 ? (
-          <motion.div
-            key={filter}
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-          >
-            {filteredItems.map((item) => (
+        {/* Items */}
+        <AnimatePresence mode="wait">
+            {filteredItems.length > 0 ? (
               <motion.div
-                key={item.id}
-                variants={itemVariants}
+                key={filter}
+                variants={containerVariants}
                 initial="hidden"
                 animate="visible"
-                exit="exit"
-                layout
+                exit="hidden"
               >
-                <BucketListCard
-                  item={item}
-                  user={user}
-                  onEdit={openEditModal}
-                  onDelete={(item) => setConfirmDeleteItem(item)}
-                />
+                {filteredItems.map((item) => (
+                  <motion.div
+                    key={item.id}
+                    variants={itemVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    layout
+                  >
+                    <BucketListCard
+                      item={item}
+                      user={user}
+                      onEdit={openEditModal}
+                      onDelete={(item) => setConfirmDeleteItem(item)}
+                    />
+                  </motion.div>
+                ))}
               </motion.div>
-            ))}
-          </motion.div>
-        ) : (
-          <motion.div
-            key={`empty-${filter}`}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.3 }}
-            className="flex flex-col items-center justify-center w-full h-[350px] text-center text-muted-foreground"
-          >
-            <Image
-              src={
-                filter === 'favorites'
-                  ? FavList
-                  : filter === 'completed'
-                  ? CompletedList
-                  : EmptyList
-              }
-              alt="Empty State"
-              width={270}
-              height={270}
-              className="mb-4 opacity-80"
-            />
-
-            <p className="text-lg font-medium">
-              {filter === 'favorites'
-                ? 'No favorites yet!'
-                : filter === 'completed'
-                ? 'Nothing completed yet!'
-                : 'Looks like your list is empty!'}
-            </p>
-            <p className="text-[12px]">
-              {filter === 'favorites'
-                ? 'Mark a WIST as favorite to see it here.'
-                : filter === 'completed'
-                ? 'Tick off a WIST to mark it as done.'
-                : 'Add your first WIST to begin!'}
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-
-
+            ) : (
+              <EmptyImage filter={filter} />
+            )}
+        </AnimatePresence>
       </div>
 
       <BucketListFormModal
