@@ -51,16 +51,16 @@ export default function CategorySelector({
     <div className="w-full">
       {!customInput ? (
         <Select value={value} onValueChange={handleSelect}>
-          <SelectTrigger className="w-full border border-border rounded-[6px]">
+          <SelectTrigger className="w-full border border-border rounded-[6px] cursor-pointer focus-visible:outline-none focus-visible:ring-0 focus-visible:border-border focus:outline-none focus:ring-0">
             <SelectValue placeholder="Select category" />
           </SelectTrigger>
           <SelectContent className="w-full border border-border rounded-[6px]">
             {defaultCategories.map((category) => (
-              <SelectItem key={category} value={category} className="cursor-pointer data-[highlighted]:bg-muted"> 
+              <SelectItem key={category} value={category} className="cursor-pointer rounded-[6px] data-[highlighted]:bg-muted data-[highlighted]:rounded-[3px]"> 
                 {category}
               </SelectItem>
             ))}
-            <SelectItem value="Custom" className="italic font-medium cursor-pointer data-[highlighted]:bg-muted"
+            <SelectItem value="Custom" className="italic font-medium rounded-[6px] cursor-pointer data-[highlighted]:rounded-[3px] data-[highlighted]:bg-muted"
                 >Custom</SelectItem>
           </SelectContent>
         </Select>

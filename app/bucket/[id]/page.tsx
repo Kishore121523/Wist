@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/button';
 import { Pencil } from 'lucide-react';
 
 import BucketListFormModal from '@/components/BucketListFormModal';
+
 import PlanningEditor from '@/components/PlanningEditor';
 import Loader from '@/components/Loader';
 
@@ -23,6 +24,7 @@ import DateInputsWithCountdown from '@/components/DateInputsWithCountdown';
 import { card1, card2, card3, card4, card5, card6, card7, card8, card9, card10, card11 } from '@/public';
 import { CheckCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import ConfirmModal from '@/components/ConfirmModal';
 
 export default function BucketDetailPage() {
   const { user } = useAuth();
@@ -39,11 +41,18 @@ export default function BucketDetailPage() {
 
   const [editModalOpen, setEditModalOpen] = useState(false);
   const heroImages = [card1, card2, card3, card4, card5, card6, card7, card8, card9, card10, card11];
+  const [unsavedDialogOpen, setUnsavedDialogOpen] = useState(false);
+  const [originalDetails, setOriginalDetails] = useState<BucketItemDetails>({
+    planningNotes: '',
+    expectedStartDate: undefined,
+    expectedEndDate: undefined,
+  });
+
 
   const randomImage = useMemo(() => {
   return heroImages[Math.floor(Math.random() * heroImages.length)];
-// eslint-disable-next-line react-hooks/exhaustive-deps
-}, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const fetchItem = async () => {
     if (!user || !id) return;
@@ -57,14 +66,24 @@ export default function BucketDetailPage() {
   const fetchDetails = async () => {
     if (!user || !id) return;
     const detail = await getBucketItemDetails(user.uid, id as string);
+
     if (detail) {
-      setDetails({
-        ...detail,
+      const parsed: BucketItemDetails = {
+        planningNotes: detail.planningNotes || '',
         expectedStartDate: detail.expectedStartDate instanceof Timestamp ? detail.expectedStartDate.toDate() : detail.expectedStartDate,
         expectedEndDate: detail.expectedEndDate instanceof Timestamp ? detail.expectedEndDate.toDate() : detail.expectedEndDate,
-      });
+        updatedAt: detail.updatedAt instanceof Timestamp ? detail.updatedAt.toDate() : detail.updatedAt,
+      };
+
+      setDetails(parsed);
+      setOriginalDetails(parsed);
     }
   };
+
+  const hasUnsavedChanges =
+    JSON.stringify(details.planningNotes) !== JSON.stringify(originalDetails.planningNotes) ||
+    details.expectedStartDate?.toString() !== originalDetails.expectedStartDate?.toString() ||
+    details.expectedEndDate?.toString() !== originalDetails.expectedEndDate?.toString();
 
   useEffect(() => {
     fetchItem();
@@ -73,15 +92,65 @@ export default function BucketDetailPage() {
   }, [user, id]);
 
   const handleSave = async () => {
-    if (!user || !id) return;
-    await setBucketItemDetails(user.uid, id as string, {
-      ...details,
-      updatedAt: new Date(),
-    });
+      if (!user || !id) return;
 
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
-  };
+      const { planningNotes, expectedStartDate, expectedEndDate } = details;
+
+      // Validate dates
+      if (!expectedStartDate || !expectedEndDate) {
+        alert('Please select both start and end dates before saving.');
+        return;
+      }
+
+      if (expectedStartDate > expectedEndDate) {
+        alert('Start date cannot be after the end date.');
+        return;
+      }
+
+      const cleanDetails: BucketItemDetails = {
+        planningNotes: planningNotes || '',
+        expectedStartDate,
+        expectedEndDate,
+        updatedAt: new Date(),
+      };
+
+      try {
+        await setBucketItemDetails(user.uid, id as string, cleanDetails);
+
+        setSaved(true);
+        setTimeout(() => setSaved(false), 2000);
+
+        setDetails((prev) => ({
+          ...prev,
+          updatedAt: new Date(),
+        }));
+
+      setOriginalDetails({
+        planningNotes: cleanDetails.planningNotes,
+        expectedStartDate: cleanDetails.expectedStartDate,
+        expectedEndDate: cleanDetails.expectedEndDate,
+        updatedAt: cleanDetails.updatedAt,
+      });
+      } catch (error) {
+        console.error('Error saving bucket item details:', error);
+        alert('Failed to save changes. Please try again.');
+      }
+};
+
+  const formatUpdatedAt = (updatedAt: Date | Timestamp | undefined) => {
+  if (!updatedAt) return null;
+
+  const date = updatedAt instanceof Timestamp ? updatedAt.toDate() : updatedAt;
+
+  return date.toLocaleString('en-US', {
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  }) 
+};
 
   if (!item) return <Loader />;
 
@@ -91,7 +160,13 @@ export default function BucketDetailPage() {
       {/* Top bar */}
       <div className="flex justify-between items-center mb-8">
         <Button
-          onClick={() => router.back()}
+          onClick={() => {
+            if (hasUnsavedChanges) {
+              setUnsavedDialogOpen(true);
+            } else {
+              router.back();
+            }
+          }}
           className="border border-foreground cursor-pointer text-foreground px-4 py-2 rounded-[6px] text-[12px] font-medium hover:bg-card-dark hover:text-background transition"
         >
           Go back
@@ -108,14 +183,24 @@ export default function BucketDetailPage() {
       {/* List Card Details  */}
       <div className="border border-border rounded-[8px] p-8 mb-8 bg-card-dark shadow-sm transition flex justify-between items-center">
         <div className="opacity-90 max-w-[calc(100%-140px)]">
-          <h1 className="text-4xl font-bold text-background mb-1">{item.name}</h1>
-          <p className="text-background mb-3 text-md break-words">{item.description}</p>
+            <h1 className="text-4xl font-bold text-background mb-1">
+              {item.name || 'Untitled'}
+            </h1>
 
-          <div className="flex flex-wrap gap-2 text-background">
-            <Badge className='border border-border rounded-[6px]'>{item.category}</Badge>
-            <Badge className='border border-border rounded-[6px]'>{item.priority} Priority</Badge>
+            <p className="text-background mb-3 text-md break-words">
+              {item.description || 'No description provided.'}
+            </p>
+
+            <div className="flex flex-wrap gap-2 text-background">
+              <Badge className="border border-border rounded-[6px]">
+                {item.category?.trim() ? item.category : 'General'}
+              </Badge>
+
+              <Badge className="border border-border rounded-[6px]">
+                {item.priority ? `${item.priority} Priority` : 'No Priority'}
+              </Badge>
+            </div>
           </div>
-        </div>
 
         <div className="w-[100px] h-[100px] rounded-md overflow-hidden flex items-center justify-center ml-6 mr-3">
           <Image
@@ -140,36 +225,67 @@ export default function BucketDetailPage() {
 
       {/* Rich text editor */}
       <div className="border border-border rounded-[8px] p-6 mb-6 bg-background shadow-sm transition">
-        <label className="block text-sm mb-2">Planning Notes</label>
+          <div className="flex justify-between items-center mb-2">
+            <label className="text-sm font-medium">Planning Notes</label>
+            {details.updatedAt && (
+              <p className="text-xs text-muted-foreground">
+                Last updated: {formatUpdatedAt(details.updatedAt)}
+              </p>
+            )}
+          </div>
         <PlanningEditor
           content={details.planningNotes || ''}
           onChange={(value) => setDetails({ ...details, planningNotes: value })}
         />
       </div>
       
-      {/* Save button */}
-      <div className="flex items-center gap-3">
-      <Button
-        onClick={handleSave}
-        className="bg-card-dark text-background px-4 py-2 rounded-[6px] text-[12px] font-medium cursor-pointer hover:bg-foreground hover:text-background transition"
-      >
-        Save Changes
-      </Button>
+    {/* Save button */}
+    <div className="flex items-center gap-3">
+        <Button
+          onClick={handleSave}
+          disabled={
+            !details.expectedStartDate ||
+            !details.expectedEndDate ||
+            details.expectedStartDate > details.expectedEndDate || !hasUnsavedChanges
+          }
+          className="bg-card-dark text-background px-4 py-2 rounded-[6px] text-[12px] font-medium cursor-pointer hover:bg-foreground hover:text-background transition disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Save Changes
+        </Button>
 
-      <AnimatePresence>
-        {saved && (
-          <motion.div
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.3 }}
-            className="flex items-center text-md text-foreground"
-          >
-            <CheckCircle size={18} />
-          </motion.div>
-        )}
-      </AnimatePresence>
+        <AnimatePresence>
+            {saved ? (
+              <motion.div
+                key="check"
+                initial={{ opacity: 0, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.3 }}
+                className="flex items-center text-md text-foreground"
+              >
+                <CheckCircle size={18} />
+              </motion.div>
+            ) : (
+              (!details.expectedStartDate ||
+                !details.expectedEndDate ||
+                details.expectedStartDate > details.expectedEndDate) && (
+                <motion.p
+                  key="error"
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.3 }}
+                  className="text-xs text-muted-foreground"
+                >
+                  {!details.expectedStartDate || !details.expectedEndDate
+                    ? 'Please select both dates.'
+                    : 'Start date must be before end date.'}
+                </motion.p>
+              )
+            )}
+          </AnimatePresence>
     </div>
+
 
       {/* Edit Modal */}
       {item && (
@@ -177,11 +293,24 @@ export default function BucketDetailPage() {
           isOpen={editModalOpen}
           onClose={() => {
             setEditModalOpen(false);
-            fetchItem(); //refresh item after closing modal
+            fetchItem();
           }}
           existingItem={item}
         />
       )}
+
+      <ConfirmModal
+        isOpen={unsavedDialogOpen}
+        onClose={() => setUnsavedDialogOpen(false)}
+        onConfirm={() => {
+          setUnsavedDialogOpen(false);
+          router.back();
+        }}
+        title="Discard unsaved changes?"
+        message="You have unsaved changes. Are you sure you want to go back? Your changes will be lost."
+        cancelLabel="Keep Editing"
+        confirmLabel="Discard Changes"
+        />
     </div>
   );
 }

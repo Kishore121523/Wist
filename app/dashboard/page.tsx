@@ -12,7 +12,6 @@ import {
 } from '@/firebase/firestore/private';
 import BucketListFormModal from '@/components/BucketListFormModal';
 import BucketListCard from '@/components/BucketListCard';
-import DeleteConfirmModal from '@/components/DeleteConfirmationModal';
 import {
   ToggleGroup,
 } from '@/components/ui/toggle-group';
@@ -22,6 +21,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import EmptyImage from '@/components/EmptyImage';
 import Loader from '@/components/Loader';
 import ViewToggleButton from '@/components/ToggleButton';
+import ConfirmModal from '@/components/ConfirmModal';
 
 
 
@@ -200,17 +200,25 @@ const itemVariants = {
         </AnimatePresence>
       </div>
 
-      <BucketListFormModal
+    <BucketListFormModal
         isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
+        onClose={() => {
+          setModalOpen(false);
+          setTimeout(() => {
+            setSelectedItem(undefined);
+          }, 300); 
+        }}
         existingItem={selectedItem}
       />
 
-      <DeleteConfirmModal
+      <ConfirmModal
         isOpen={!!confirmDeleteItem}
-        onClose={() => setConfirmDeleteItem(null)}
+        onClose={() => setConfirmDeleteItem(null) }
         onConfirm={handleDeleteConfirmed}
-        itemName={confirmDeleteItem?.name || ''}
+        title={`Delete “${confirmDeleteItem?.name || ''}”?`}
+        message="This action cannot be undone."
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
       />
     </div>
   );
