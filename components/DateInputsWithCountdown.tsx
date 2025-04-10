@@ -1,9 +1,11 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { differenceInCalendarDays, isAfter, isBefore } from 'date-fns';
+import { differenceInCalendarDays } from 'date-fns';
 import { Timestamp } from 'firebase/firestore';
 import { DatePicker } from './DatePicker';
+import { calculateCountdownFill, getCountdownMessage, validateDateOrder } from '@/lib/utils';
+
 
 interface Props {
   startDate?: Date | Timestamp;
@@ -23,19 +25,10 @@ export default function DateInputsWithCountdown({
   const end = endDate instanceof Date ? endDate : undefined;
 
   const totalCountdownDays = start ? differenceInCalendarDays(start, today) : 0;
-  const maxCountdown = 30;
-  const fill = Math.max(0, Math.min(100, ((maxCountdown - totalCountdownDays) / maxCountdown) * 100));
+  const fill = start ? calculateCountdownFill(start, today) : 0;
 
-  const getCountdownMessage = (fill: number) => {
-    if (fill >= 100) return 'Today’s the day! Let’s go!';
-    if (fill >= 76) return 'Almost there! Get pumped!';
-    if (fill >= 51) return 'Not long now, stay ready!';
-    if (fill >= 21) return 'You’re warming up nicely!';
-    return 'Still early, perfect time to plan!';
-  };
+  const { showStartError, showEndError } = validateDateOrder(start, end);
 
-  const showStartError = start && end && isAfter(start, end);
-  const showEndError = end && start && isBefore(end, start);
 
   return (
     <div className="space-y-4">

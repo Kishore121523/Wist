@@ -22,8 +22,8 @@ import EmptyImage from '@/components/EmptyImage';
 import Loader from '@/components/Loader';
 import ViewToggleButton from '@/components/ToggleButton';
 import ConfirmModal from '@/components/ConfirmModal';
-
-
+import { getGreeting, containerVariants, itemVariants } from '@/lib/utils';
+import { btnBlackBg, btnWhiteBg } from '@/lib/constants';
 
 export default function DashboardPage() {
   const { user, loading } = useAuth();
@@ -42,14 +42,6 @@ export default function DashboardPage() {
       return () => unsub();
     }
   }, [user, loading, router]);
-
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return 'Good morning';
-    if (hour < 17) return 'Good afternoon';
-    if (hour < 21) return 'Good evening';
-    return 'Good night';
-  };
 
   const handleSignOut = async () => {
     await signOut(auth);
@@ -79,35 +71,6 @@ export default function DashboardPage() {
     return true;
   });
 
-  const containerVariants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.08,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: -16 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.3,
-      ease: 'easeOut',
-    },
-  },
-  exit: {
-    opacity: 0,
-    y: 12,
-    transition: {
-      duration: 0.2,
-      ease: 'easeIn',
-    },
-  },
-};
-
   if (loading) return <Loader />;
 
   return (
@@ -123,13 +86,13 @@ const itemVariants = {
           <div className="flex gap-[1rem]">
             <button
               onClick={openNewItemModal}
-              className="bg-card-dark text-background px-4 py-2 rounded-[6px] text-[12px] font-medium cursor-pointer border border-foreground hover:bg-foreground transition duration-200 ease-in-out">
+              className={btnBlackBg}>
               Add a WIST
             </button>
 
             <button
               onClick={handleSignOut}
-              className="border border-foreground cursor-pointer text-foreground px-4 py-2 rounded-[6px] text-[12px] font-medium hover:bg-card-dark hover:text-background transition">
+              className={btnWhiteBg}>
               Sign Out
             </button>
           </div>
@@ -200,6 +163,7 @@ const itemVariants = {
         </AnimatePresence>
       </div>
 
+    {/* Modals */}
     <BucketListFormModal
         isOpen={modalOpen}
         onClose={() => {

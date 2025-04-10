@@ -3,6 +3,13 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 
+interface CategorySelectorProps {
+  value: string;
+  onChange: (val: string) => void;
+  selectItemInputStyle?: string;
+  selectTriggerStyle?: string;
+}
+
 const defaultCategories = [
   'Travel',
   'Adventure',
@@ -19,10 +26,9 @@ const defaultCategories = [
 export default function CategorySelector({
   value,
   onChange,
-}: {
-  value: string;
-  onChange: (val: string) => void;
-}) {
+  selectItemInputStyle,
+  selectTriggerStyle
+}: CategorySelectorProps) {
   const [customInput, setCustomInput] = useState(value && !defaultCategories.includes(value));
   const [customValue, setCustomValue] = useState(value);
 
@@ -51,12 +57,12 @@ export default function CategorySelector({
     <div className="w-full">
       {!customInput ? (
         <Select value={value} onValueChange={handleSelect}>
-          <SelectTrigger className="w-full border border-border rounded-[6px] cursor-pointer focus-visible:outline-none focus-visible:ring-0 focus-visible:border-border focus:outline-none focus:ring-0">
+          <SelectTrigger className={selectTriggerStyle}>
             <SelectValue placeholder="Select category" />
           </SelectTrigger>
           <SelectContent className="w-full border border-border rounded-[6px]">
             {defaultCategories.map((category) => (
-              <SelectItem key={category} value={category} className="cursor-pointer rounded-[6px] data-[highlighted]:bg-muted data-[highlighted]:rounded-[3px]"> 
+              <SelectItem key={category} value={category} className={selectItemInputStyle}> 
                 {category}
               </SelectItem>
             ))}

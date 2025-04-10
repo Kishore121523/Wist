@@ -20,6 +20,10 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@
 import CategorySelect from './CategorySelect';
 import { Textarea } from './ui/textarea';
 import ConfirmModal from './ConfirmModal';
+import { formInputStyle,
+  selectItemInputStyle,
+  selectTriggerStyle,
+  btnWhiteBg } from '@/lib/constants';
 
 interface Props {
   isOpen: boolean;
@@ -87,8 +91,6 @@ export default function BucketListFormModal({ isOpen, onClose, existingItem }: P
     }
   };
 
-  const classNameInput = 'w-full border border-border rounded-[6px] focus-visible:border-border focus-visible:outline-none focus-visible:ring-0 focus:outline-none focus:ring-0';
-
   return (
     <>
       <Dialog open={isOpen} onOpenChange={handleClose}>
@@ -105,29 +107,31 @@ export default function BucketListFormModal({ isOpen, onClose, existingItem }: P
               value={form.name}
               onChange={handleChange}
               placeholder="Name"
-              className={classNameInput}
+              className={formInputStyle}
             />
             <Textarea
               name="description"
               value={form.description}
               onChange={handleChange}
               placeholder="Description"
-              className={classNameInput}
+              className={formInputStyle}
             />
 
             <CategorySelect
               value={form.category}
               onChange={(val) => setForm({ ...form, category: val })}
+              selectItemInputStyle={selectItemInputStyle}
+              selectTriggerStyle={selectTriggerStyle}
             />
 
             <Select value={form.priority} onValueChange={handlePriorityChange}>
-              <SelectTrigger className="w-full border border-border rounded-[6px] cursor-pointer focus-visible:outline-none focus-visible:ring-0 focus-visible:border-border focus:outline-none focus:ring-0">
+              <SelectTrigger className={selectTriggerStyle}>
                 <SelectValue placeholder="Select priority" />
               </SelectTrigger>
               <SelectContent className="w-full border border-border rounded-[6px]">
-                <SelectItem className="cursor-pointer" value="Low">Low</SelectItem>
-                <SelectItem className="cursor-pointer" value="Medium">Medium</SelectItem>
-                <SelectItem className="cursor-pointer" value="High">High</SelectItem>
+                <SelectItem className={selectItemInputStyle} value="Low">Low</SelectItem>
+                <SelectItem className={selectItemInputStyle} value="Medium">Medium</SelectItem>
+                <SelectItem className={selectItemInputStyle} value="High">High</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -135,13 +139,14 @@ export default function BucketListFormModal({ isOpen, onClose, existingItem }: P
           <div className="flex justify-end gap-4">
             <Button
               onClick={handleClose}
-              className="border border-foreground cursor-pointer text-foreground px-4 py-2 rounded-[6px] text-[12px] font-medium hover:bg-card-dark hover:text-background transition"
+              className={btnWhiteBg}
             >
               Cancel
             </Button>
             <Button
               onClick={handleSubmit}
-              className="border border-foreground cursor-pointer text-foreground px-4 py-2 rounded-[6px] text-[12px] font-medium hover:bg-card-dark hover:text-background transition"
+              className={btnWhiteBg}
+              disabled={!form.name}
             >
               {isEdit ? 'Update' : 'Add'}
             </Button>

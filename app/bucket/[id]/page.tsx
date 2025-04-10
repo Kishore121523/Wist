@@ -7,24 +7,23 @@ import { getBucketItemDetails, setBucketItemDetails } from '@/firebase/firestore
 import { getDoc, doc, Timestamp } from 'firebase/firestore';
 import { db } from '@/firebase/firebase';
 import { useAuth } from '@/context/AuthContext';
-
-import { BucketItem } from '@/types/bucket';
-import { BucketItemDetails } from '@/types/details';
+import { Pencil } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Pencil } from 'lucide-react';
-
 import BucketListFormModal from '@/components/BucketListFormModal';
-
 import PlanningEditor from '@/components/PlanningEditor';
 import Loader from '@/components/Loader';
-
 import DateInputsWithCountdown from '@/components/DateInputsWithCountdown';
-import { card1, card2, card3, card4, card5, card6, card7, card8, card9, card10, card11 } from '@/public';
 import { CheckCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ConfirmModal from '@/components/ConfirmModal';
+
+import { BucketItem } from '@/types/bucket';
+import { BucketItemDetails } from '@/types/details';
+import { card1, card2, card3, card4, card5, card6, card7, card8, card9, card10, card11 } from '@/public';
+import { formatUpdatedAt, getRandomImage } from '@/lib/utils';
+import { btnBlackBg, btnWhiteBg } from '@/lib/constants';
 
 export default function BucketDetailPage() {
   const { user } = useAuth();
@@ -49,10 +48,8 @@ export default function BucketDetailPage() {
   });
 
 
-  const randomImage = useMemo(() => {
-  return heroImages[Math.floor(Math.random() * heroImages.length)];
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const randomImage = useMemo(() => getRandomImage(heroImages), []);
 
   const fetchItem = async () => {
     if (!user || !id) return;
@@ -92,64 +89,48 @@ export default function BucketDetailPage() {
   }, [user, id]);
 
   const handleSave = async () => {
-      if (!user || !id) return;
+    if (!user || !id) return;
 
-      const { planningNotes, expectedStartDate, expectedEndDate } = details;
+    const { planningNotes, expectedStartDate, expectedEndDate } = details;
 
-      // Validate dates
-      if (!expectedStartDate || !expectedEndDate) {
-        alert('Please select both start and end dates before saving.');
-        return;
-      }
+    // Validate dates
+    if (!expectedStartDate || !expectedEndDate) {
+      alert('Please select both start and end dates before saving.');
+      return;
+    }
 
-      if (expectedStartDate > expectedEndDate) {
-        alert('Start date cannot be after the end date.');
-        return;
-      }
+    if (expectedStartDate > expectedEndDate) {
+      alert('Start date cannot be after the end date.');
+      return;
+    }
 
-      const cleanDetails: BucketItemDetails = {
-        planningNotes: planningNotes || '',
-        expectedStartDate,
-        expectedEndDate,
+    const cleanDetails: BucketItemDetails = {
+      planningNotes: planningNotes || '',
+      expectedStartDate,
+      expectedEndDate,
+      updatedAt: new Date(),
+    };
+
+    try {
+      await setBucketItemDetails(user.uid, id as string, cleanDetails);
+
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+
+      setDetails((prev) => ({
+        ...prev,
         updatedAt: new Date(),
-      };
+      }));
 
-      try {
-        await setBucketItemDetails(user.uid, id as string, cleanDetails);
-
-        setSaved(true);
-        setTimeout(() => setSaved(false), 2000);
-
-        setDetails((prev) => ({
-          ...prev,
-          updatedAt: new Date(),
-        }));
-
-      setOriginalDetails({
-        planningNotes: cleanDetails.planningNotes,
-        expectedStartDate: cleanDetails.expectedStartDate,
-        expectedEndDate: cleanDetails.expectedEndDate,
-        updatedAt: cleanDetails.updatedAt,
-      });
-      } catch (error) {
-        console.error('Error saving bucket item details:', error);
-        alert('Failed to save changes. Please try again.');
-      }
-};
-
-  const formatUpdatedAt = (updatedAt: Date | Timestamp | undefined) => {
-  if (!updatedAt) return null;
-
-  const date = updatedAt instanceof Timestamp ? updatedAt.toDate() : updatedAt;
-
-  return date.toLocaleString('en-US', {
-    hour: 'numeric',
-    minute: 'numeric',
-    hour12: true,
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-  }) 
+    setOriginalDetails({
+      planningNotes: cleanDetails.planningNotes,
+      expectedStartDate: cleanDetails.expectedStartDate,
+      expectedEndDate: cleanDetails.expectedEndDate,
+      updatedAt: cleanDetails.updatedAt,
+    });
+    } catch (error) {
+      alert(`Failed to save changes. Please try again. ${error}`);
+    }
 };
 
   if (!item) return <Loader />;
@@ -167,13 +148,13 @@ export default function BucketDetailPage() {
               router.back();
             }
           }}
-          className="border border-foreground cursor-pointer text-foreground px-4 py-2 rounded-[6px] text-[12px] font-medium hover:bg-card-dark hover:text-background transition"
+          className={btnWhiteBg}
         >
           Go back
         </Button>
 
         <Button
-          className="border border-foreground cursor-pointer text-foreground px-4 py-2 rounded-[6px] text-[12px] font-medium hover:bg-card-dark hover:text-background transition"
+          className={btnWhiteBg}
           onClick={() => setEditModalOpen(true)}
         >
           <Pencil className='mx-[-2px] h-[2px]' />Edit
@@ -248,7 +229,7 @@ export default function BucketDetailPage() {
             !details.expectedEndDate ||
             details.expectedStartDate > details.expectedEndDate || !hasUnsavedChanges
           }
-          className="bg-card-dark text-background px-4 py-2 rounded-[6px] text-[12px] font-medium cursor-pointer hover:bg-foreground hover:text-background transition disabled:opacity-50 disabled:cursor-not-allowed"
+          className={btnBlackBg}
         >
           Save Changes
         </Button>
@@ -287,7 +268,7 @@ export default function BucketDetailPage() {
     </div>
 
 
-      {/* Edit Modal */}
+      {/*  Modals */}
       {item && (
         <BucketListFormModal
           isOpen={editModalOpen}

@@ -5,6 +5,8 @@ import { Pencil, Trash, Star, CheckCircle, Circle, BadgeCheck, Calendar } from '
 import { motion } from 'framer-motion';
 import { toggleFavoriteBucketItem, toggleCompletedBucketItem } from '@/firebase/firestore/private';
 import { useRouter } from 'next/navigation';
+import { formatDate, getPriorityBadgeStyle } from '@/lib/utils';
+import CardActionButton from './CardActionButton';
 
 interface BucketListCardProps {
   item: BucketItem;
@@ -25,25 +27,7 @@ export default function BucketListCard({ item, user, onEdit, onDelete }: BucketL
       : 'border-border border-1 bg-background hover:bg-popover'
   }`;
 
-  const badgeColor = `inline-flex items-center gap-1 text-[12px] px-2 py-0.5 rounded ${
-    item.completed
-      ? 'border border-black text-black font-medium'
-      : item.priority === 'High'
-      ? 'bg-card-dark text-background'
-      : item.priority === 'Medium'
-      ? 'bg-gray-500 text-background'
-      : 'bg-gray-400 text-background'
-  }`;
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const formatDate = (date?: any) => {
-    if (!date?.toDate) return '';
-    return date.toDate().toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
+  const badgeColor = `inline-flex items-center gap-1 text-[12px] px-2 py-0.5 rounded ${getPriorityBadgeStyle(item.priority, item.completed)}`;
 
   return (
     <motion.div
@@ -93,56 +77,56 @@ export default function BucketListCard({ item, user, onEdit, onDelete }: BucketL
     </div>
 
     <div
-      className="flex gap-3 ml-4"
-      onClick={(e) => e.stopPropagation()} // prevent card click
+      className="flex gap-3 ml-4 justify-center items-center"
+      onClick={(e) => e.stopPropagation()}
     >
-      <button
+      <CardActionButton
         onClick={() => onEdit(item)}
-        className="text-muted-foreground hover:text-foreground transition cursor-pointer"
-      >
-        <Pencil size={18} />
-      </button>
+        icon={<Pencil size={18} />}
+        tooltip="Edit"
+      />
 
-      <motion.button
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        transition={{ duration: 0.2 }}
-        onClick={async (e) => {
-          e.stopPropagation();
-          if (user && item.id) {
-            await toggleFavoriteBucketItem(user.uid, item.id, item.isFavorite ?? false);
-          }
-        }}
-        className={`transition cursor-pointer ${
-          item.isFavorite ? 'text-card-dark' : 'text-muted-foreground hover:text-foreground'
-        }`}
-      >
-        {item.isFavorite ? <Star fill="card-dark" size={18} /> : <Star size={18} />}
-      </motion.button>
+    <CardActionButton
+      onClick={async (e) => {
+        e.stopPropagation();
+        if (user && item.id) {
+          await toggleFavoriteBucketItem(user.uid, item.id, item.isFavorite ?? false);
+        }
+      }}
+      icon={
+        item.isFavorite ? <Star fill="card-dark" size={18} /> : <Star size={18} />
+      }
+      tooltip={item.isFavorite ? 'Unfavorite' : 'Favorite'}
+      highlight={item.isFavorite}
+      scaleOnHover
+    />
 
-      <motion.button
-        whileTap={{ scale: 1.2 }}
-        transition={{ type: 'spring', stiffness: 300, damping: 12 }}
-        onClick={async (e) => {
-          e.stopPropagation();
-          if (user && item.id) {
-            await toggleCompletedBucketItem(user.uid, item.id, item.completed);
-          }
-        }}
-        className="cursor-pointer text-muted-foreground hover:text-foreground transition"
-      >
-        {item.completed ? <CheckCircle size={18} className="text-black" /> : <Circle size={18} />}
-      </motion.button>
+    <CardActionButton
+      onClick={async (e) => {
+        e.stopPropagation();
+        if (user && item.id) {
+          await toggleCompletedBucketItem(user.uid, item.id, item.completed);
+        }
+      }}
+      icon={
+        item.completed ? (
+          <CheckCircle size={18} className="text-black" />
+        ) : (
+          <Circle size={18} />
+        )
+      }
+      tooltip={item.completed ? 'Incomplete' : 'Complete'}
+    />
 
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          onDelete(item);
-        }}
-        className="text-muted-foreground hover:text-foreground transition cursor-pointer"
-      >
-        <Trash size={18} />
-      </button>
+    <CardActionButton
+      onClick={(e) => {
+        e.stopPropagation();
+        onDelete(item);
+      }}
+      icon={<Trash size={18} />}
+      tooltip="Delete"
+    />
+
     </div>
   </motion.div>
   );

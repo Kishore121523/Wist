@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { btnRedBg, btnWhiteBg } from '@/lib/constants';
 
 interface ConfirmationModalProps {
   sourcePage?: string;
@@ -49,13 +50,13 @@ export default function ConfirmModal({
         <div className="flex justify-end gap-4">
           <Button
             onClick={onClose}
-            className="border border-foreground cursor-pointer text-foreground px-4 py-2 rounded-[6px] text-[12px] font-medium hover:bg-card-dark hover:text-background transition"
+            className={btnWhiteBg}
           >
             {cancelLabel}
           </Button>
           <Button
             onClick={onConfirm}
-            className="border border-foreground bg-destructive text-destructive-foreground px-4 py-2 rounded-[6px] text-[12px] font-medium hover:bg-red-500 hover:text-white hover:border-red-500 transition cursor-pointer"
+            className={btnRedBg}
           >
             {confirmLabel}
           </Button>
