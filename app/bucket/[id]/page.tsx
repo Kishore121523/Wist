@@ -7,9 +7,8 @@ import { getBucketItemDetails, setBucketItemDetails } from '@/firebase/firestore
 import { getDoc, doc, Timestamp } from 'firebase/firestore';
 import { db } from '@/firebase/firebase';
 import { useAuth } from '@/context/AuthContext';
-import { Pencil } from 'lucide-react';
+import { Pencil,ArrowRight, ArrowLeft } from 'lucide-react';
 
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import BucketListFormModal from '@/components/BucketListFormModal';
 import PlanningEditor from '@/components/PlanningEditor';
@@ -24,6 +23,10 @@ import { BucketItemDetails } from '@/types/details';
 import { card1, card2, card3, card4, card5, card6, card7, card8, card9, card10, card11 } from '@/public';
 import { formatUpdatedAt, getRandomImage } from '@/lib/utils';
 import { btnBlackBg, btnWhiteBg } from '@/lib/constants';
+import Tooltip from '@/components/Tooltip'; 
+import { toggleCompletedBucketItem } from '@/firebase/firestore/private';
+import BucketItemHeader from '@/components/BuckeItemHeader';
+
 
 export default function BucketDetailPage() {
   const { user } = useAuth();
@@ -69,7 +72,7 @@ export default function BucketDetailPage() {
         planningNotes: detail.planningNotes || '',
         expectedStartDate: detail.expectedStartDate instanceof Timestamp ? detail.expectedStartDate.toDate() : detail.expectedStartDate,
         expectedEndDate: detail.expectedEndDate instanceof Timestamp ? detail.expectedEndDate.toDate() : detail.expectedEndDate,
-        updatedAt: detail.updatedAt instanceof Timestamp ? detail.updatedAt.toDate() : detail.updatedAt,
+        updatedAtPlanning: detail.updatedAtPlanning instanceof Timestamp ? detail.updatedAtPlanning.toDate() : detail.updatedAtPlanning,
       };
 
       setDetails(parsed);
@@ -108,7 +111,7 @@ export default function BucketDetailPage() {
       planningNotes: planningNotes || '',
       expectedStartDate,
       expectedEndDate,
-      updatedAt: new Date(),
+      updatedAtPlanning: new Date(),
     };
 
     try {
@@ -119,19 +122,27 @@ export default function BucketDetailPage() {
 
       setDetails((prev) => ({
         ...prev,
-        updatedAt: new Date(),
+        updatedAtPlanning: new Date(),
       }));
 
     setOriginalDetails({
       planningNotes: cleanDetails.planningNotes,
       expectedStartDate: cleanDetails.expectedStartDate,
       expectedEndDate: cleanDetails.expectedEndDate,
-      updatedAt: cleanDetails.updatedAt,
+      updatedAtPlanning: cleanDetails.updatedAtPlanning,
     });
     } catch (error) {
       alert(`Failed to save changes. Please try again. ${error}`);
     }
 };
+
+  const handleBack = () => {
+    if (hasUnsavedChanges) {
+      setUnsavedDialogOpen(true);
+    } else {
+      router.back();
+    }
+  };
 
   if (!item) return <Loader />;
 
@@ -141,15 +152,10 @@ export default function BucketDetailPage() {
       {/* Top bar */}
       <div className="flex justify-between items-center mb-8">
         <Button
-          onClick={() => {
-            if (hasUnsavedChanges) {
-              setUnsavedDialogOpen(true);
-            } else {
-              router.back();
-            }
-          }}
+          onClick={handleBack}
           className={btnWhiteBg}
         >
+          <ArrowLeft size={16} className="mr-[-3px]" />
           Go back
         </Button>
 
@@ -163,25 +169,16 @@ export default function BucketDetailPage() {
 
       {/* List Card Details  */}
       <div className="border border-border rounded-[8px] p-8 mb-8 bg-card-dark shadow-sm transition flex justify-between items-center">
-        <div className="opacity-90 max-w-[calc(100%-140px)]">
-            <h1 className="text-4xl font-bold text-background mb-1">
-              {item.name || 'Untitled'}
-            </h1>
 
-            <p className="text-background mb-3 text-md break-words">
-              {item.description || 'No description provided.'}
-            </p>
-
-            <div className="flex flex-wrap gap-2 text-background">
-              <Badge className="border border-border rounded-[6px]">
-                {item.category?.trim() ? item.category : 'General'}
-              </Badge>
-
-              <Badge className="border border-border rounded-[6px]">
-                {item.priority ? `${item.priority} Priority` : 'No Priority'}
-              </Badge>
-            </div>
-          </div>
+        <BucketItemHeader
+          item={item}
+          user={user}
+          onToggleComplete={async () => {
+            if (!user || !item.id) return;
+            await toggleCompletedBucketItem(user.uid, item.id, item.completed);
+            fetchItem(); // or refetch if needed
+          }}
+        />
 
         <div className="w-[100px] h-[100px] rounded-md overflow-hidden flex items-center justify-center ml-6 mr-3">
           <Image
@@ -208,9 +205,9 @@ export default function BucketDetailPage() {
       <div className="border border-border rounded-[8px] p-6 mb-6 bg-background shadow-sm transition">
           <div className="flex justify-between items-center mb-2">
             <label className="text-sm font-medium">Planning Notes</label>
-            {details.updatedAt && (
+            {details.updatedAtPlanning && (
               <p className="text-xs text-muted-foreground">
-                Last updated: {formatUpdatedAt(details.updatedAt)}
+                Last updated: {formatUpdatedAt(details.updatedAtPlanning)}
               </p>
             )}
           </div>
@@ -221,7 +218,8 @@ export default function BucketDetailPage() {
       </div>
       
     {/* Save button */}
-    <div className="flex items-center gap-3">
+    <div className="flex items-center justify-between gap-3">
+      <div className="flex items-center gap-3">
         <Button
           onClick={handleSave}
           disabled={
@@ -233,7 +231,6 @@ export default function BucketDetailPage() {
         >
           Save Changes
         </Button>
-
         <AnimatePresence>
             {saved ? (
               <motion.div
@@ -265,8 +262,22 @@ export default function BucketDetailPage() {
               )
             )}
           </AnimatePresence>
-    </div>
+       </div>     
 
+      {/* Reflections */}
+      <div className="flex items-center gap-3">
+        <Tooltip label={item.completed ? 'Write your reflections' : 'Complete task before adding reflections'}>
+          <Button
+            onClick={() => router.push(`/bucket/${item.id}/reflections`)}
+            disabled={!item.completed}
+            className={btnBlackBg}
+          >
+            Reflections 
+            <ArrowRight size={16} className="ml-[-3px]" />
+          </Button>
+        </Tooltip>
+      </div>
+      </div>
 
       {/*  Modals */}
       {item && (

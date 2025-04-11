@@ -4,9 +4,16 @@ export interface BucketItemDetails {
   expectedStartDate?: Date | Timestamp;
   expectedEndDate?: Date | Timestamp;
   planningNotes?: string;
-  memoryPhotos?: string[];
-  reflectionNotes?: string;
+
+  // New structure for photos and comments
+  memoryPhotos?: {
+    url: string;
+    comment?: string;
+    uploadedAt?: Date | Timestamp;
+  }[];
+
   collaborators?: string[];
   createdAt?: Date;
-  updatedAt?: Date;
+  updatedAtPlanning?: Date;
+  updatedAtMemoryPhotos?: Date;
 }
