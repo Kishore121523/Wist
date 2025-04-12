@@ -1,7 +1,7 @@
 'use client';
 
 import { BucketItem } from '@/types/bucket';
-import { Pencil, Trash, Star, CheckCircle, Circle, BadgeCheck, Calendar } from 'lucide-react';
+import { Pencil, Trash, Star, CheckCircle, Circle, BadgeCheck, Calendar, NotepadText } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { toggleFavoriteBucketItem, toggleCompletedBucketItem } from '@/firebase/firestore/private';
 import { useRouter } from 'next/navigation';
@@ -71,6 +71,18 @@ export default function BucketListCard({ item, user, onEdit, onDelete }: BucketL
             </>
           ) : (
             `${item.priority} Priority`
+          )}
+        </span>
+        
+        <span>
+          {item.completed && (
+            <div className={`${badgeColor} cursor-pointer hover:bg-card-dark hover:text-background transition`} onClick={(e) => {
+              e.stopPropagation();
+              router.push(`/bucket/${item.id}/reflections`);
+            }}>
+              <NotepadText size={14} />
+              Reflections
+            </div>
           )}
         </span>
       </div>

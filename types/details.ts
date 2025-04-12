@@ -10,10 +10,10 @@ export interface BucketItemDetails {
     url: string;
     comment?: string;
     uploadedAt?: Date | Timestamp;
+    updatedAtMemoryPhoto?: Date;
   }[];
 
   collaborators?: string[];
   createdAt?: Date;
   updatedAtPlanning?: Date;
-  updatedAtMemoryPhotos?: Date;
 }
