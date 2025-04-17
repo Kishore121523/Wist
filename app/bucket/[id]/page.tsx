@@ -262,11 +262,11 @@ export default function BucketDetailPage() {
               )
             )}
           </AnimatePresence>
-       </div>     
+      </div>     
 
       {/* Reflections */}
       <div className="flex items-center gap-3">
-        <Tooltip label={item.completed ? 'Write your reflections' : 'Complete task before adding reflections'}>
+        <Tooltip label={item.completed ? 'Add reflections' : 'Complete task before adding reflections'}>
           <Button
             onClick={() => router.push(`/bucket/${item.id}/reflections`)}
             disabled={!item.completed}

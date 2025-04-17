@@ -3,7 +3,7 @@
 import { BucketItem } from '@/types/bucket';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
-import { CheckCircle, Circle } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
 
 interface Props {
   item: BucketItem;
@@ -47,16 +47,14 @@ export default function BucketItemHeader({ item, onToggleComplete, disableToggle
           ) : (
             <motion.button
               whileTap={{ scale: 0.95 }}
-              whileHover={{ scale: 1.03 }}
+              whileHover={{ scale: 1.02 }}
               transition={{ type: 'spring', stiffness: 250, damping: 15 }}
               onClick={onToggleComplete}
               className="flex items-center gap-1 text-xs cursor-pointer"
             >
               {completed ? (
                 <CheckCircle size={14} className="text-card-dark" />
-              ) : (
-                <Circle size={14} className="text-background" />
-              )}
+              ) : (<></>) }
               {completed ? 'Completed' : 'Mark as Completed'}
             </motion.button>
           )}

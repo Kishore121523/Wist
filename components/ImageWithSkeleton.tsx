@@ -40,3 +40,5 @@ export default function ImageWithSkeleton({ delay = 1000, ...props }: Props) {
     </div>
   );
 }
+
+

@@ -3,7 +3,7 @@
 import { useState, useRef, ChangeEvent, useEffect } from 'react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Trash2, Clock, CheckCircle } from 'lucide-react';
+import { Trash2, Clock, CheckCircle, Info } from 'lucide-react';
 import { uploadMemoryPhoto } from '@/firebase/storage/uploadMemoryPhoto';
 import { formatUpdatedAt } from '@/lib/utils';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
@@ -17,6 +17,26 @@ import { AnimatePresence, motion } from 'framer-motion';
 import AlertModal from './AlertModal';
 import ImagePreview from './imagePreview';
 import ImageWithSkeleton from './ImageWithSkeleton';
+import Image from 'next/image';
+
+import {
+  DndContext,
+  closestCenter,
+  DragOverlay,
+  useSensor,
+  useSensors,
+  PointerSensor,
+} from '@dnd-kit/core';
+
+import {
+  SortableContext,
+  useSortable,
+  arrayMove,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+
+import { CSS } from '@dnd-kit/utilities';
+import Tooltip from './Tooltip';
 
 interface Memory {
   url: string;
@@ -31,6 +51,7 @@ interface Props {
   userId: string;
   bucketId: string;
 }
+
 
 export default function MemoryBentoGrid({
   photos = [],
@@ -47,9 +68,16 @@ export default function MemoryBentoGrid({
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [activeId, setActiveId] = useState<string | null>(null);
 
 
-const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: { distance: 5 },
+    })
+  );
 
 useEffect(() => {
   if (isEditing && textareaRef.current) {
@@ -128,6 +156,7 @@ useEffect(() => {
   };
 
   const handleEditClick = (index: number) => {
+    console.log(index)
     setActiveIndex(index);
     setComment(photos[index]?.comment || '');
   };
@@ -144,7 +173,7 @@ useEffect(() => {
     setComment(updated[activeIndex].comment || '');
     setIsEditing(false);
     setSaved(true);
-    setTimeout(() => setSaved(false), 2000); // auto-hide checkmark
+    setTimeout(() => setSaved(false), 2000); 
   };
 
   const handleConfirmedDelete = async () => {
@@ -166,9 +195,19 @@ useEffect(() => {
   return (
     <div className="space-y-6">
       <div className="flex flex-col items-start gap-3">
-        <h4 className="text-xl font-semibold tracking-wide text-foreground">
-          Memories and Reflections
-        </h4>
+        <div className="flex justify-between items-center w-full">
+          <h4 className="text-xl font-semibold tracking-wide text-foreground">
+            Memories and Reflections
+          </h4>
+
+          <Tooltip
+            label={`Double-click to edit reflection`}
+            label2={`Click and drag to reorder memories`}
+            sourceComp="cardItems"
+          >
+            <Info className="w-5 h-5 text-muted-foreground cursor-pointer" />
+          </Tooltip>
+        </div>
         <Button
           type="button"
           onClick={() => fileRef.current?.click()}
@@ -179,61 +218,97 @@ useEffect(() => {
       </div>
       <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
 
-      <AnimatePresence mode="popLayout">
-          <div className="columns-2 md:columns-3 gap-4 space-y-4">
-                {photos.map((photo, index) => (
-                <motion.div
-                  key={photo.url}
-                  layout
-                  initial={{ opacity: 0, scale: 0.95, y: 10 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.3, delay: index * 0.05 }}
-                  className="relative overflow-hidden rounded-[6px] break-inside-avoid group"
-                  onMouseEnter={() => setHoveredIndex(index)}
-                  onMouseLeave={() => setHoveredIndex(null)}
-                >
-                  <ImageWithSkeleton
-                    src={photo.url}
-                    alt={`Memory ${index + 1}`}
-                    width={600}
-                    height={400}
-                    className="w-full rounded-[6px] object-cover hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
-                    onClick={() => handleEditClick(index)}
-                  />
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragStart={({ active }) => {
+          setActiveId(active.id as string);
+        }}
+        onDragEnd={({ active, over }) => {
+          setActiveId(null);
 
-            {/* Hover Comment */}
-            <AnimatePresence>
-              {hoveredIndex === index && photo.comment?.trim() && (
-                <motion.div
-                  key="comment"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 20 }}
-                  transition={{ duration: 0.3, ease: 'easeInOut' }}
-                  className="absolute bottom-0 left-0 w-full p-3 bg-gradient-to-t from-black/100 to-black/20 text-white"
-                >
-                  <p className="text-xs line-clamp-2">{photo.comment}</p>
+          if (active.id !== over?.id) {
+            const oldIndex = photos.findIndex((p) => p.url === active.id);
+            const newIndex = photos.findIndex((p) => p.url === over?.id);
+            const reordered = arrayMove(photos, oldIndex, newIndex);
+            onChange(reordered);
+            saveToFirestore(reordered); // persist new order
+          }
+        }}
+      >
+        <SortableContext items={photos.map(p => p.url)} strategy={verticalListSortingStrategy}>
+            <AnimatePresence mode="popLayout">
+                <div className="columns-2 md:columns-3 gap-4 space-y-4">
+                      {photos.map((photo, index) => (
+                      <motion.div
+                        key={photo.url}
+                        layout
+                        initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        transition={{ duration: 0.3, delay: index * 0.05 }}
+                        className="relative overflow-hidden rounded-[6px] break-inside-avoid group"
+                        onMouseEnter={() => setHoveredIndex(index)}
+                        onMouseLeave={() => setHoveredIndex(null)}
+                      >
+                        <SortablePhoto
+                          key={photo.url}
+                          photo={photo}
+                          index={index}
+                          onDoubleClick={(e) => {
+                            e.stopPropagation();
+                            handleEditClick(index);
+                          }}
+                        />
+
+                  {/* Hover Comment */}
+                  <AnimatePresence>
+                    {hoveredIndex === index && photo.comment?.trim() && (
+                      <motion.div
+                        key="comment"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 20 }}
+                        transition={{ duration: 0.3, ease: 'easeInOut' }}
+                        className="absolute bottom-0 left-0 w-full p-3 bg-gradient-to-t from-black/100 to-black/20 text-white"
+                      >
+                        <p className="text-xs line-clamp-2">{photo.comment}</p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Delete Button */}
+                  <div className="absolute top-2 right-2 flex gap-2">
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="bg-background hover:bg-card-dark hover:text-background cursor-pointer w-8 h-8 rounded-[6px] p-1"
+                      onClick={() => setConfirmDeleteIndex(index)}
+                    >
+                      <Trash2 size={16} />
+                    </Button>
+                  </div>
                 </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Delete Button */}
-            <div className="absolute top-2 right-2 flex gap-2">
-              <Button
-                size="icon"
-                variant="ghost"
-                className="bg-background hover:bg-card-dark hover:text-background cursor-pointer w-8 h-8 rounded-[6px] p-1"
-                onClick={() => setConfirmDeleteIndex(index)}
-              >
-                <Trash2 size={16} />
-              </Button>
+              ))}
             </div>
-          </motion.div>
-        ))}
-      </div>
-      </AnimatePresence>
+            </AnimatePresence>
+        </SortableContext>
 
+      <DragOverlay adjustScale={false}>
+        {activeId && (
+          <div className="w-[300px] max-w-full h-auto pointer-events-none">
+      <Image
+        key={activeId}
+        src={activeId}
+        alt="Dragging"
+        width={600}
+        height={400}
+        className="w-full h-auto rounded-[6px] shadow-lg opacity-90 object-contain"
+      />
+    </div>
+        )}
+      </DragOverlay>
+      </DndContext>
 
 
     <Dialog open={activeIndex !== null} onOpenChange={() => {setActiveIndex(null); setIsEditing(false)} }>
@@ -264,9 +339,9 @@ useEffect(() => {
                     />
                   ) : (
                     <div
-                      className={`${formInputStyle} resize-none max-h-[100px] px-3 py-2 min-h-[50px] overflow-y-auto rounded-[6px] text-center text-sm`}
-                      onClick={() => setIsEditing(true)}
-                    >
+                        className={`${formInputStyle} px-3 py-2 max-h-[100px] min-h-[50px] overflow-y-auto overflow-x-hidden whitespace-pre-wrap break-words rounded-[6px] text-center text-sm`}
+                        onClick={() => setIsEditing(true)}
+                      >
                       {comment ? comment : 'Write your reflection about this memory....'}
                     </div>
                   )}
@@ -332,5 +407,64 @@ useEffect(() => {
         message={alertMessage}
       />
     </div>
+  );
+}
+
+
+function SortablePhoto({
+  photo,
+  index,
+  onDoubleClick,
+}: {
+  photo: Memory;
+  index: number;
+  onDoubleClick: (e: React.MouseEvent<HTMLDivElement>) => void;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: photo.url });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 50 : 0,
+  };
+
+  return (
+    <motion.div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      layout
+      initial={{ opacity: 0, scale: 0.95, y: 10 }}
+      animate={{
+        opacity: 1,
+        scale: isDragging ? 1.03 : 1,
+        y: 0,
+        boxShadow: isDragging
+          ? '0px 6px 18px rgba(0, 0, 0, 0.2)'
+          : '0px 2px 4px rgba(0, 0, 0, 0.05)',
+      }}
+      exit={{ opacity: 0, scale: 0.9 }}
+      transition={{ duration: 0.3, delay: index * 0.05 }}
+      className={`relative overflow-hidden rounded-[6px] break-inside-avoid group ${
+        isDragging ? 'cursor-grabbing' : 'cursor-pointer'
+      }`}
+    >
+      <ImageWithSkeleton
+        src={photo.url}
+        alt={`Memory ${index + 1}`}
+        width={600}
+        height={400}
+        className="w-full rounded-[6px] object-cover hover:scale-105 transition duration-300 ease-in-out"
+        onDoubleClick={onDoubleClick}
+      />
+    </motion.div>
   );
 }
