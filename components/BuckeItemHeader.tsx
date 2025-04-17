@@ -8,10 +8,13 @@ import { CheckCircle, Circle } from 'lucide-react';
 interface Props {
   item: BucketItem;
   user: { uid: string } | null;
-  onToggleComplete: () => void;
+  onToggleComplete?: () => void; // Optional now
+  disableToggle?: boolean; // Pass true on reflections page
 }
 
-export default function BucketItemHeader({ item, onToggleComplete }: Props) {
+export default function BucketItemHeader({ item, onToggleComplete, disableToggle = false }: Props) {
+  const completed = item.completed;
+
   return (
     <div className="opacity-90 max-w-[calc(100%-140px)]">
       <h1 className="text-4xl font-bold text-background mb-1">
@@ -33,25 +36,30 @@ export default function BucketItemHeader({ item, onToggleComplete }: Props) {
 
         <Badge
           className={`flex items-center justify-center border border-border rounded-[6px] ${
-            item.completed
-              ? 'bg-background text-card-dark'
-              : 'bg-card-dark text-background'
+            completed ? 'bg-background text-card-dark' : 'bg-card-dark text-background'
           }`}
         >
-          <motion.button
-            whileTap={{ scale: 0.95 }}
-            whileHover={{ scale: 1.03 }}
-            transition={{ type: 'spring', stiffness: 250, damping: 15 }}
-            onClick={onToggleComplete}
-            className="flex items-center gap-1 text-xs cursor-pointer"
-          >
-            {item.completed ? (
+          {disableToggle ? (
+            <>
               <CheckCircle size={14} className="text-card-dark" />
-            ) : (
-              <Circle size={14} className="text-background" />
-            )}
-            {item.completed ? 'Completed' : 'Mark as Completed'}
-          </motion.button>
+              <span className="text-xs ml-1">Completed</span>
+            </>
+          ) : (
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.03 }}
+              transition={{ type: 'spring', stiffness: 250, damping: 15 }}
+              onClick={onToggleComplete}
+              className="flex items-center gap-1 text-xs cursor-pointer"
+            >
+              {completed ? (
+                <CheckCircle size={14} className="text-card-dark" />
+              ) : (
+                <Circle size={14} className="text-background" />
+              )}
+              {completed ? 'Completed' : 'Mark as Completed'}
+            </motion.button>
+          )}
         </Badge>
       </div>
     </div>

@@ -1,14 +1,13 @@
 'use client';
 
 import { useState, useRef, ChangeEvent, useEffect } from 'react';
-import Image from 'next/image';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Trash2, Clock } from 'lucide-react';
+import { Trash2, Clock, CheckCircle } from 'lucide-react';
 import { uploadMemoryPhoto } from '@/firebase/storage/uploadMemoryPhoto';
 import { formatUpdatedAt } from '@/lib/utils';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
-import { btnBlackBg, formInputStyle } from '@/lib/constants';
+import { btnBlackBg, btnWhiteBg, formInputStyle } from '@/lib/constants';
 import { Textarea } from './ui/textarea';
 import { doc, getDoc, setDoc, Timestamp } from 'firebase/firestore';
 import { db } from '@/firebase/firebase';
@@ -16,6 +15,8 @@ import { BucketItemDetails } from '@/types/details';
 import ConfirmModal from './ConfirmModal';
 import { AnimatePresence, motion } from 'framer-motion';
 import AlertModal from './AlertModal';
+import ImagePreview from './imagePreview';
+import ImageWithSkeleton from './ImageWithSkeleton';
 
 interface Memory {
   url: string;
@@ -43,7 +44,21 @@ export default function MemoryBentoGrid({
   const [alertOpen, setAlertOpen] = useState(false);
   const [comment, setComment] = useState('');
   const fileRef = useRef<HTMLInputElement>(null);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [saved, setSaved] = useState(false);
 
+
+const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+
+useEffect(() => {
+  if (isEditing && textareaRef.current) {
+    textareaRef.current.focus();
+    // move cursor to end
+    const length = textareaRef.current.value.length;
+    textareaRef.current.setSelectionRange(length, length);
+  }
+}, [isEditing]);
   const fetchLatestPhotos = async () => {
     const ref = doc(db, 'users', userId, 'privateBucketLists', bucketId, 'details', 'info');
     const snap = await getDoc(ref);
@@ -126,15 +141,17 @@ export default function MemoryBentoGrid({
       updatedAtMemoryPhoto: new Date(),
     };
     await saveToFirestore(updated);
-    setActiveIndex(null);
-    setComment('');
+    setComment(updated[activeIndex].comment || '');
+    setIsEditing(false);
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000); // auto-hide checkmark
   };
 
   const handleConfirmedDelete = async () => {
     if (confirmDeleteIndex === null) return;
     const updated = [...photos];
     updated.splice(confirmDeleteIndex, 1);
-    await saveToFirestore(updated); // 🔥 Persist to Firestore
+    await saveToFirestore(updated);
     setConfirmDeleteIndex(null);
   };
 
@@ -145,84 +162,115 @@ export default function MemoryBentoGrid({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId, bucketId]);
 
+
   return (
     <div className="space-y-6">
-      <Button
-        type="button"
-        onClick={() => fileRef.current?.click()}
-        className="bg-muted border border-border text-foreground hover:bg-card-dark hover:text-background transition"
-      >
-        Upload Photo
-      </Button>
+      <div className="flex flex-col items-start gap-3">
+        <h4 className="text-xl font-semibold tracking-wide text-foreground">
+          Memories and Reflections
+        </h4>
+        <Button
+          type="button"
+          onClick={() => fileRef.current?.click()}
+          className={btnWhiteBg}
+        >
+          Upload Photo
+        </Button>
+      </div>
       <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
 
       <AnimatePresence mode="popLayout">
-        <div className="columns-2 md:columns-3 gap-3 space-y-3">
-          {photos.map((photo, index) => (
-            <motion.div
-              key={photo.url}
-              layout
-              initial={{ opacity: 0, scale: 0.95, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.3, delay: index * 0.05 }}
-              className="relative overflow-hidden rounded-[6px] break-inside-avoid"
-            >
-              <Image
-                src={photo.url}
-                alt={`Memory ${index + 1}`}
-                width={600}
-                height={400}
-                className="w-full rounded-[6px] object-cover hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
-                onClick={() => handleEditClick(index)}
-              />
-
-              <div className="absolute top-2 right-2 flex gap-2">
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="bg-background hover:bg-card-dark hover:text-background w-8 h-8 rounded-[6px] p-1"
-                  onClick={() => setConfirmDeleteIndex(index)}
+          <div className="columns-2 md:columns-3 gap-4 space-y-4">
+                {photos.map((photo, index) => (
+                <motion.div
+                  key={photo.url}
+                  layout
+                  initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                  className="relative overflow-hidden rounded-[6px] break-inside-avoid group"
+                  onMouseEnter={() => setHoveredIndex(index)}
+                  onMouseLeave={() => setHoveredIndex(null)}
                 >
-                  <Trash2 size={16} />
-                </Button>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+                  <ImageWithSkeleton
+                    src={photo.url}
+                    alt={`Memory ${index + 1}`}
+                    width={600}
+                    height={400}
+                    className="w-full rounded-[6px] object-cover hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
+                    onClick={() => handleEditClick(index)}
+                  />
+
+            {/* Hover Comment */}
+            <AnimatePresence>
+              {hoveredIndex === index && photo.comment?.trim() && (
+                <motion.div
+                  key="comment"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.3, ease: 'easeInOut' }}
+                  className="absolute bottom-0 left-0 w-full p-3 bg-gradient-to-t from-black/100 to-black/20 text-white"
+                >
+                  <p className="text-xs line-clamp-2">{photo.comment}</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Delete Button */}
+            <div className="absolute top-2 right-2 flex gap-2">
+              <Button
+                size="icon"
+                variant="ghost"
+                className="bg-background hover:bg-card-dark hover:text-background cursor-pointer w-8 h-8 rounded-[6px] p-1"
+                onClick={() => setConfirmDeleteIndex(index)}
+              >
+                <Trash2 size={16} />
+              </Button>
+            </div>
+          </motion.div>
+        ))}
+      </div>
       </AnimatePresence>
 
 
 
-    <Dialog open={activeIndex !== null} onOpenChange={() => setActiveIndex(null)}>
+    <Dialog open={activeIndex !== null} onOpenChange={() => {setActiveIndex(null); setIsEditing(false)} }>
         <DialogContent className="bg-background max-w-md max-h-[70vh] h-[70vh] border border-border rounded-[6px] p-6 [&>button]:hidden">
           <VisuallyHidden>
             <DialogTitle>Photo Upload Dialog</DialogTitle>
           </VisuallyHidden>
 
-          <div className="flex justify-center items-center">
-            <h2 className="text-xl font-semibold">Memory</h2>
-          </div>
+        <div className="flex justify-center items-center mb-0">
+          <h2 className="text-xl font-semibold tracking-wide text-foreground">
+            Reflection
+          </h2>
+        </div>
 
           {activeIndex !== null && photos[activeIndex] && (
             <>
-              <div className="w-full max-h-[250px] overflow-hidden rounded-[6px] flex items-center justify-center">
-                  <Image
-                    src={photos[activeIndex].url}
-                    alt="Preview"
-                    width={500}
-                    height={300}
-                    className="object-contain max-h-[250px] w-auto h-auto rounded-[6px] shadow-sm"
-                  />
-                </div>
-
+              <ImagePreview src={photos[activeIndex].url} />
+              
                 {/* Textarea */}
-                <Textarea
-                  value={comment || ''}
-                  onChange={(e) => setComment(e.target.value)}
-                  placeholder="Write your reflection about this memory..."
-                  className={`${formInputStyle} resize-none max-h-[100px] min-h-[50px] overflow-y-auto rounded-[6px] text-center`}
-                />
+                {isEditing ? (
+                    <Textarea
+                      ref={textareaRef}
+                      value={comment}
+                      onBlur={setIsEditing.bind(null, false)}
+                      placeholder="Write your reflection about this memory...."
+                      onChange={(e) => setComment(e.target.value)}
+                      className={`${formInputStyle} resize-none max-h-[100px] min-h-[50px] overflow-y-auto rounded-[6px] text-center border-card-dark!`}
+                    />
+                  ) : (
+                    <div
+                      className={`${formInputStyle} resize-none max-h-[100px] px-3 py-2 min-h-[50px] overflow-y-auto rounded-[6px] text-center text-sm`}
+                      onClick={() => setIsEditing(true)}
+                    >
+                      {comment ? comment : 'Write your reflection about this memory....'}
+                    </div>
+                  )}
+
 
                 {/* Timestamps */}
                 <div className="text-xs text-muted-foreground flex items-center justify-center flex-col gap-[2px]">
@@ -233,15 +281,35 @@ export default function MemoryBentoGrid({
                   {photos[activeIndex].updatedAtMemoryPhoto && (
                     <div className="flex items-center gap-1">
                       <Clock size={12} />
-                      Updated: {formatUpdatedAt(photos[activeIndex].updatedAtMemoryPhoto)}
+                      Last Updated: {formatUpdatedAt(photos[activeIndex].updatedAtMemoryPhoto)}
                     </div>
                   )}
                 </div>
 
                 {/* Save Button */}
                 <div className="flex justify-center items-center">
-                  <Button onClick={handleSaveComment} className={`${btnBlackBg} flex w-full py-5! justify-center items-center cursor-pointer`}>Save</Button>
-                </div>
+                  <Button
+                    onClick={handleSaveComment}
+                    className={`${btnBlackBg} flex w-full py-5! justify-center items-center cursor-pointer`}
+                  >
+                  <span className='ml-5'>Save</span>
+                  <span className="inline-flex w-[18px] h-[18px] items-center justify-center">
+                    <AnimatePresence>
+                      {saved && (
+                        <motion.span
+                          key="saved"
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.8 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <CheckCircle size={16} className="text-background ml-[-5px]" />
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
+                  </span>
+                  </Button>
+              </div>
 
             </>
           )}

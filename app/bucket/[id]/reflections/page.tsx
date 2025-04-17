@@ -21,7 +21,6 @@ import {
   card7, card8, card9, card10, card11
 } from '@/public';
 import Image from 'next/image';
-import { toggleCompletedBucketItem } from '@/firebase/firestore/private';
 import MemoryBentoGrid from '@/components/MemoryBentoGrid';
 
 export default function ReflectionPage() {
@@ -84,11 +83,7 @@ export default function ReflectionPage() {
         <BucketItemHeader
           item={item}
           user={user}
-          onToggleComplete={async () => {
-            if (!user || !item.id) return;
-            await toggleCompletedBucketItem(user.uid, item.id, item.completed);
-            fetchItem(); 
-          }}
+          disableToggle={true}
         />
 
         <div className="w-[100px] h-[100px] rounded-md overflow-hidden flex items-center justify-center ml-6 mr-3">
@@ -104,9 +99,6 @@ export default function ReflectionPage() {
 
       {/* Memory Upload UI */}
       <div className="border border-border rounded-[8px] p-6 mb-6 bg-background shadow-sm transition">
-        <div className="flex justify-between items-center mb-2">
-          <label className="text-sm font-medium">Memories & Reflections</label>
-        </div>
         <MemoryBentoGrid
           photos={(photos || []).map(photo => ({
             ...photo,
