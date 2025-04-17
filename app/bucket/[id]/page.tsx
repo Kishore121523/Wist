@@ -266,7 +266,7 @@ export default function BucketDetailPage() {
 
       {/* Reflections */}
       <div className="flex items-center gap-3">
-        <Tooltip label={item.completed ? 'Add reflections' : 'Complete task before adding reflections'}>
+        <Tooltip label={item.completed ? 'Time to drop a memory' : 'Available after completion'}>
           <Button
             onClick={() => router.push(`/bucket/${item.id}/reflections`)}
             disabled={!item.completed}

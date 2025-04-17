@@ -19,15 +19,15 @@ export default function BucketListCard({ item, user, onEdit, onDelete }: BucketL
 
   const router = useRouter();
   
-  const cardStyle = `p-4 border rounded-[6px] mb-4 flex justify-between items-center transition cursor-pointer ${
-    item.completed
-      ? 'bg-muted border border-muted text-muted-foreground shadow-inner'
-      : item.isFavorite
-      ? 'border-black border-1 bg-gray-70'
-      : 'border-border border-1 bg-background hover:bg-popover'
-  }`;
+  const cardStyle = `p-4 border rounded-[6px] mb-5 sm:mb-4 flex justify-center items-center gap-0 sm:gap-0 transition cursor-pointer ${
+  item.completed
+    ? 'bg-muted border border-muted text-muted-foreground shadow-inner'
+    : item.isFavorite
+    ? 'border-black border-1 bg-gray-70'
+    : 'border-border border-1 bg-background hover:bg-popover'
+}`;
 
-  const badgeColor = `inline-flex items-center gap-1 text-[12px] px-2 py-0.5 rounded ${getPriorityBadgeStyle(item.priority, item.completed)}`;
+  const badgeColor = `inline-flex items-center gap-1 text-[10px] sm:text-[12px] px-2 py-0.5 rounded ${getPriorityBadgeStyle(item.priority, item.completed)}`;
 
   return (
     <motion.div
@@ -66,7 +66,7 @@ export default function BucketListCard({ item, user, onEdit, onDelete }: BucketL
         <span className={badgeColor}>
           {item.completed ? (
             <>
-              <BadgeCheck size={14} className="text-black" />
+              <BadgeCheck className="text-black w-[12px] h-[12px] sm:w-[14px] sm:h-[14px]" />
               Completed
             </>
           ) : (
@@ -80,7 +80,7 @@ export default function BucketListCard({ item, user, onEdit, onDelete }: BucketL
               e.stopPropagation();
               router.push(`/bucket/${item.id}/reflections`);
             }}>
-              <NotepadText size={14} />
+              <NotepadText className='w-[12px] h-[12px] sm:w-[14px] sm:h-[14px]' />
               Reflections
             </div>
           )}
@@ -88,13 +88,12 @@ export default function BucketListCard({ item, user, onEdit, onDelete }: BucketL
       </div>
     </div>
 
-    <div
-      className="flex gap-3 ml-4 justify-center items-center"
-      onClick={(e) => e.stopPropagation()}
-    >
+    <div className="flex flex-wrap flex-col justify-center items-center gap-3 sm:gap-3 sm:flex-row"
+          onClick={(e) => e.stopPropagation()}
+        >
       <CardActionButton
         onClick={() => onEdit(item)}
-        icon={<Pencil size={18} />}
+        icon={<Pencil className="w-[16px] h-[16px] sm:w-[18px] sm:h-[18px]" />}
         tooltip="Edit"
       />
 
@@ -106,7 +105,7 @@ export default function BucketListCard({ item, user, onEdit, onDelete }: BucketL
         }
       }}
       icon={
-        item.isFavorite ? <Star fill="card-dark" size={18} /> : <Star size={18} />
+        item.isFavorite ? <Star fill="card-dark" className="w-[16px] h-[16px] sm:w-[18px] sm:h-[18px]" /> : <Star className="w-[16px] h-[16px] sm:w-[18px] sm:h-[18px]" />
       }
       tooltip={item.isFavorite ? 'Unfavorite' : 'Favorite'}
       highlight={item.isFavorite}
@@ -122,9 +121,9 @@ export default function BucketListCard({ item, user, onEdit, onDelete }: BucketL
       }}
       icon={
         item.completed ? (
-          <CheckCircle size={18} className="text-black" />
+          <CheckCircle className="w-[16px] h-[16px] sm:w-[18px] sm:h-[18px] text-black"/>
         ) : (
-          <Circle size={18} />
+          <Circle className="w-[16px] h-[16px] sm:w-[18px] sm:h-[18px]" />
         )
       }
       tooltip={item.completed ? 'Incomplete' : 'Complete'}
@@ -135,7 +134,7 @@ export default function BucketListCard({ item, user, onEdit, onDelete }: BucketL
         e.stopPropagation();
         onDelete(item);
       }}
-      icon={<Trash size={18} />}
+      icon={<Trash className="w-[16px] h-[16px] sm:w-[18px] sm:h-[18px]" />}
       tooltip="Delete"
     />
 

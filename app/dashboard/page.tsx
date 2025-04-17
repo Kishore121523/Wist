@@ -74,16 +74,16 @@ export default function DashboardPage() {
   if (loading) return <Loader />;
 
   return (
-    <div className="min-h-screen flex justify-center items-start px-[10rem] py-24 bg-background text-foreground">
+    <div className="min-h-screen flex justify-center items-start px-6 sm:px-8 md:px-12 lg:px-[12rem] py-12 sm:py-24 bg-background text-foreground">
       <div className="flex flex-col w-full max-w-4xl">
 
         {/* Head*/}
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-semibold text-muted-foreground capitalize">
+    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-semibold text-muted-foreground capitalize">
             {getGreeting()},
-            <p className="text-4xl text-foreground">{user?.displayName || user?.email}</p>
+            <p className="text-3xl sm:text-4xl text-foreground">{user?.displayName || user?.email}</p>
           </h1>
-          <div className="flex gap-[1rem]">
+          <div className="flex flex-wrap gap-3 sm:gap-4 justify-start">
             <button
               onClick={openNewItemModal}
               className={btnBlackBg}>
@@ -99,27 +99,27 @@ export default function DashboardPage() {
         </div>
 
         {/* Filter */}
-        <div className="mb-6">
+        <div className="mb-6 overflow-x-auto">
           <ToggleGroup
             type="single"
             value={filter}
             onValueChange={(val) => {
               if (val) setFilter(val as 'all' | 'favorites' | 'completed');
             }}
-            className="flex gap-3"
+            className="flex items-center justify-center gap-2 sm:gap-3"
           >
               <ViewToggleButton value="all">
-                <List size={14} />
+                <List className="w-[12px] h-[12px] sm:w-[14px] sm:h-[14px]" />
                 All
               </ViewToggleButton>
 
               <ViewToggleButton value="favorites">
-                <Star size={14} />
+                <Star className="w-[12px] h-[12px] sm:w-[14px] sm:h-[14px]" />
                 Favorites
               </ViewToggleButton>
 
               <ViewToggleButton value="completed">
-                <CheckCircle size={14} />
+                <CheckCircle className="w-[12px] h-[12px] sm:w-[14px] sm:h-[14px]" />
                 Completed
               </ViewToggleButton>
 
@@ -127,7 +127,9 @@ export default function DashboardPage() {
         </div>
         
         {/* Bucket List Items */}
-        <h2 className="text-xl font-bold mb-3">Your WIST.</h2>
+      <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-3 sm:mb-3">
+          Your WIST.
+      </h2>
 
         {/* Items */}
         <AnimatePresence mode="wait">

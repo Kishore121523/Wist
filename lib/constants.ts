@@ -10,13 +10,13 @@ export const selectTriggerStyle =
 
 // Button styles
 export const btnWhiteBg =
-  "border border-foreground cursor-pointer text-foreground px-4 py-2 rounded-[6px] text-[12px] font-medium hover:bg-card-dark hover:text-background transition";
+  "border border-foreground cursor-pointer text-foreground px-2 py-[8px] sm:px-4 sm:py-2 rounded-[6px] text-[10px] sm:text-[12px] font-medium hover:bg-card-dark hover:text-background transition";
 
 export const btnBlackBg =
-  "bg-card-dark text-background px-4 py-2 rounded-[6px] text-[12px] font-medium cursor-pointer border border-foreground hover:bg-foreground transition duration-200 ease-in-out";
+  "bg-card-dark text-background px-2 py-[8px] sm:px-4 sm:py-2 rounded-[6px] text-[10px] sm:text-[12px] font-medium cursor-pointer border border-foreground hover:bg-foreground transition duration-200 ease-in-out";
 
 export const btnRedBg =
-  "border border-foreground bg-destructive text-destructive-foreground px-4 py-2 rounded-[6px] text-[12px] font-medium hover:bg-red-500 hover:text-white hover:border-red-500 transition cursor-pointer";
+  "border border-foreground bg-destructive text-destructive-foreground px-2 py-[8px] sm:px-4 sm:py-2 rounded-[6px] text-[10px] sm:text-[12px] font-medium hover:bg-red-500 hover:text-white hover:border-red-500 transition cursor-pointer";
 
 export const editorButtonStyle = (active: boolean) =>
   active
