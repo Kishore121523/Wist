@@ -39,35 +39,41 @@ export default function Home() {
   if (loading) return <Loader />;
 
   return (
-<div className="min-h-screen flex flex-col sm:flex-row justify-center items-center px-6 sm:px-12 md:px-[10rem] lg:px-[15rem] bg-background text-foreground text-center sm:text-left">
-  <div className="flex flex-col justify-center items-center sm:items-start sm:pr-12">
-    <h1 className="text-5xl sm:text-6xl font-semibold mb-2">WIST.</h1>
-    <p className="text-muted-foreground mb-4 text-[15px] sm:text-[16px]">Plan, dream, and achieve</p>
+    <div className="min-h-screen w-full flex items-center justify-center bg-background text-foreground overflow-hidden">
+      <div className="flex flex-col sm:flex-row items-center sm:items-start justify-center px-6 sm:px-12 md:px-[10rem] lg:px-[15rem] text-center sm:text-left max-w-[100vw]">
+        
+        {/* Left Content */}
+        <div className="flex flex-col justify-center items-center sm:items-start sm:pr-12">
+          <h1 className="text-5xl sm:text-6xl font-semibold mb-2">WIST.</h1>
+          <p className="text-muted-foreground mb-4 text-[15px] sm:text-[16px]">Plan, dream, and achieve</p>
 
-        <button
-          onClick={handleGoogleSignIn}
-                className="bg-transparent text-foreground text-[14px] px-4 py-3 rounded-[6px] font-medium cursor-pointer border border-foreground hover:bg-foreground hover:text-background transition duration-200 ease-in-out"
-        >
-          Sign in with Google
-        </button>
-      </div>
+          <button
+            onClick={handleGoogleSignIn}
+            className="bg-transparent text-foreground text-[14px] px-4 py-3 rounded-[6px] font-medium cursor-pointer border border-foreground hover:bg-foreground hover:text-background transition duration-200 ease-in-out"
+          >
+            Sign in with Google
+          </button>
+        </div>
 
+        {/* Middle Line */}
         <Image 
           src="/assets/line.svg"
-          alt="Hero Image"
+          alt="Hero Divider"
           width={450}
           height={50}
-          className='hidden sm:block mx-[4rem] mb-[3rem]'
+          className="hidden sm:block mx-[4rem] mb-[3rem]"
         />
 
+        {/* Right Logo */}
         <Image 
-        src="/assets/logoMain.svg"
-        alt="Hero Image"
-        width={50}
-        height={50}
-        className='hidden sm:block'
-      />
-      
+          src="/assets/logoMain.svg"
+          alt="Hero Logo"
+          width={50}
+          height={50}
+          className="hidden sm:block"
+        />
+      </div>
     </div>
+
   );
 }
