@@ -340,7 +340,7 @@ useEffect(() => {
                     />
                   ) : (
                     <div
-                        className={`${formInputStyle} px-3 py-2 max-h-[100px] min-h-[50px] overflow-y-auto overflow-x-hidden whitespace-pre-wrap break-words rounded-[6px] text-center text-sm`}
+                        className={`${formInputStyle} px-3 py-2 max-h-[100px] min-h-[50px] overflow-y-auto overflow-x-hidden whitespace-pre-wrap break-words rounded-[6px] text-center sm:text-sm!`}
                         onClick={() => setIsEditing(true)}
                       >
                       {comment ? comment : 'Write your reflection about this memory....'}
