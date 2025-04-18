@@ -1,14 +1,19 @@
-import { motion } from 'framer-motion'
-import React from 'react'
+'use client';
+
+import { motion } from 'framer-motion';
+import Image from 'next/image';
+import React from 'react';
 
 interface EmptyImageProps {
-  filter: 'all' | 'favorites' | 'completed'
+  filter: 'all' | 'favorites' | 'completed';
 }
-import { EmptyList, FavList, CompletedList } from '@/public';
 
 const EmptyImage = ({ filter }: EmptyImageProps) => {
-  const Illustration =
-    filter === 'favorites' ? FavList : filter === 'completed' ? CompletedList : EmptyList;
+  const getImageSrc = () => {
+    if (filter === 'favorites') return '/assets/FavList.svg';
+    if (filter === 'completed') return '/assets/CompletedList.svg';
+    return '/assets/EmptyList.svg';
+  };
 
   return (
     <motion.div
@@ -19,9 +24,13 @@ const EmptyImage = ({ filter }: EmptyImageProps) => {
       transition={{ duration: 0.3, ease: 'easeOut' }}
       className="flex flex-col items-center justify-center w-full h-[350px] text-center text-muted-foreground"
     >
-      <div className="mb-4 opacity-80 w-[270px] h-[270px]">
-        <Illustration className="w-full h-full" />
-      </div>
+      <Image
+        src={getImageSrc()}
+        alt="Empty State"
+        width={270}
+        height={270}
+        className="mb-4 opacity-80"
+      />
 
       <p className="text-lg font-medium">
         {filter === 'favorites'
@@ -41,4 +50,4 @@ const EmptyImage = ({ filter }: EmptyImageProps) => {
   );
 };
 
-export default EmptyImage
+export default EmptyImage;

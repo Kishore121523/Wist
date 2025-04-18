@@ -16,10 +16,6 @@ import { BucketItem } from '@/types/bucket';
 import { BucketItemDetails } from '@/types/details';
 import { getRandomImage } from '@/lib/utils';
 import {  btnWhiteBg } from '@/lib/constants';
-import {
-  card1, card2, card3, card4, card5, card6,
-  card7, card8, card9, card10, card11
-} from '@/public';
 import Image from 'next/image';
 import MemoryBentoGrid from '@/components/MemoryBentoGrid';
 
@@ -31,9 +27,21 @@ export default function ReflectionPage() {
   const [item, setItem] = useState<BucketItem | null>(null);
   const [photos, setPhotos] = useState<BucketItemDetails['memoryPhotos']>([]);
 
-  const heroImages = [card1, card2, card3, card4, card5, card6, card7, card8, card9, card10, card11];
+const heroImages = [
+  '/assets/card1.svg',
+  '/assets/card2.svg',
+  '/assets/card3.svg',
+  '/assets/card4.svg',
+  '/assets/card5.svg',
+  '/assets/card6.svg',
+  '/assets/card7.svg',
+  '/assets/card8.svg',
+  '/assets/card9.svg',
+  '/assets/card10.svg',
+  '/assets/card11.svg',
+];
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const randomImage = useMemo(() => getRandomImage(heroImages), []);
+const randomImage = useMemo(() => getRandomImage(heroImages), []);
 
   const fetchItem = async () => {
     if (!user || !id) return;

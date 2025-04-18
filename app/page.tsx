@@ -6,7 +6,6 @@ import { useAuth } from '@/context/AuthContext';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, provider } from '@/firebase/firebase';
 import Image from 'next/image';
-import { Line, LogoMain } from '@/public';
 
 export default function Home() {
   const router = useRouter();
@@ -45,7 +44,7 @@ export default function Home() {
       </div>
 
         <Image 
-          src={Line}
+          src="/assets/line.svg"
           alt="Hero Image"
           width={450}
           height={50}
@@ -53,7 +52,7 @@ export default function Home() {
         />
 
         <Image 
-        src={LogoMain}
+        src="/assets/logoMain.svg"
         alt="Hero Image"
         width={50}
         height={50}
