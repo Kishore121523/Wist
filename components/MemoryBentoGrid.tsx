@@ -202,7 +202,7 @@ useEffect(() => {
 
           <Tooltip
             label={`Double-click to edit reflection`}
-            label2={`Click and drag to reorder memories`}
+            label2={`Click and drag to reorder memories (Desktop only)`}
             sourceComp="cardItems"
           >
             <Info className="w-5 h-5 text-muted-foreground cursor-pointer" />
@@ -312,13 +312,14 @@ useEffect(() => {
 
 
     <Dialog open={activeIndex !== null} onOpenChange={() => {setActiveIndex(null); setIsEditing(false)} }>
-        <DialogContent className="bg-background max-w-md max-h-[70vh] h-[70vh] border border-border rounded-[6px] p-6 [&>button]:hidden">
+        <DialogContent className=" text-card-foreground w-[85vw] sm:w-[95vw]
+        bg-card max-w-lg max-h-[70vh] h-[70vh] border border-border rounded-[6px] p-4 sm:p-6 [&>button]:hidden">
           <VisuallyHidden>
-            <DialogTitle>Photo Upload Dialog</DialogTitle>
+            <DialogTitle className="text-lg sm:text-2xl font-semibold">Photo Upload Dialog</DialogTitle>
           </VisuallyHidden>
 
         <div className="flex justify-center items-center mb-0">
-          <h2 className="text-xl font-semibold tracking-wide text-foreground">
+          <h2 className="text-xl sm:text-2xl font-semibold tracking-wide text-foreground">
             Reflection
           </h2>
         </div>

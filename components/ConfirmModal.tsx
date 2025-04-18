@@ -38,16 +38,16 @@ export default function ConfirmModal({
               sourcePage === 'bucketListFormModal' ? 'w-[28rem]' : 'min-w-[20rem] max-w-full'
             )}>
         <DialogHeader>
-          <DialogTitle className="text-lg font-semibold">
+          <DialogTitle className="text-lg sm:text-xl text-left font-semibold">
             {title}
           </DialogTitle>
         </DialogHeader>
 
-        <p className="text-sm text-muted-foreground mt-[-10px]">
+        <p className="text-xs sm:text-sm text-muted-foreground mt-[-10px]">
           {message}
         </p>
 
-        <div className="flex justify-end gap-4">
+        <div className="flex flex-row justify-end gap-3 sm:gap-4 mt-2">
           <Button
             onClick={onClose}
             className={btnWhiteBg}

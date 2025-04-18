@@ -66,19 +66,19 @@ export default function CategorySelector({
                 {category}
               </SelectItem>
             ))}
-            <SelectItem value="Custom" className="italic font-medium rounded-[6px] cursor-pointer data-[highlighted]:rounded-[3px] data-[highlighted]:bg-muted"
+            <SelectItem value="Custom" className="italic text-xs sm:text-sm font-medium rounded-[6px] cursor-pointer data-[highlighted]:rounded-[3px] data-[highlighted]:bg-muted"
                 >Custom</SelectItem>
           </SelectContent>
         </Select>
       ) : (
-        <div className="flex gap-2">
+        <div className="flex justify-center items-center gap-2">
           <Input
             value={customValue}
             onChange={handleInputChange}
             placeholder="Enter custom category"
-            className="w-full border border-border rounded-[6px] focus-visible:outline-none focus-visible:ring-0 focus-visible:border-border focus:outline-none focus:ring-0"
+            className="w-full text-xs border border-border rounded-[6px] focus-visible:outline-none focus-visible:ring-0 focus-visible:border-border focus:outline-none focus:ring-0"
           />
-          <Button variant="outline" onClick={handleBackToSelect} className="text-[12px] px-2 cursor-pointer rounded-[6px]">
+          <Button variant="outline" onClick={handleBackToSelect} className="text-xs sm:text-[12px] px-2 cursor-pointer rounded-[6px]">
             Categories
           </Button>
         </div>

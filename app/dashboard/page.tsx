@@ -75,7 +75,7 @@ export default function DashboardPage() {
   if (loading) return <Loader />;
 
   return (
-    <div className="min-h-screen flex justify-center items-start px-6 sm:px-8 md:px-12 lg:px-[12rem] py-12 sm:py-24 bg-background text-foreground">
+    <div className="min-h-screen flex justify-center items-start px-6 sm:px-8 md:px-12 lg:px-[12rem] py-10 sm:py-20 bg-background text-foreground">
       <div className="flex flex-col w-full max-w-4xl">
 
         {/* Head*/}

@@ -72,10 +72,10 @@ const randomImage = useMemo(() => getRandomImage(heroImages), []);
   if (!item) return <Loader />;
 
   return (
-    <div className="min-h-screen px-6 sm:px-8 md:px-12 lg:px-[12rem] py-12 sm:py-24 bg-background text-foreground">
+    <div className="min-h-screen px-6 sm:px-8 md:px-12 lg:px-[12rem] py-10 sm:py-20 bg-background text-foreground">
       
       {/* Top bar */}
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex justify-between items-center mb-6 sm:mb-8">
         <Button onClick={() => router.back()} className={btnWhiteBg}>
           <ArrowLeft size={16} className="mr-[-3px]" />
           Go back
@@ -87,7 +87,7 @@ const randomImage = useMemo(() => getRandomImage(heroImages), []);
       </div>
 
       {/* Item Card */}
-      <div className="border border-border rounded-[8px] p-8 mb-8 bg-card-dark shadow-sm transition flex justify-between items-center">
+      <div className="border border-border rounded-[8px] p-8 mb-6 sm:mb-8 bg-card-dark shadow-sm transition flex justify-between items-center">
         <BucketItemHeader
           item={item}
           user={user}

@@ -158,7 +158,7 @@ const heroImages = [
   if (!item) return <Loader />;
 
   return (
-    <div className="min-h-screen px-6 sm:px-8 md:px-12 lg:px-[12rem] py-12 sm:py-24 bg-background text-foreground">
+    <div className="min-h-screen px-6 sm:px-8 md:px-12 lg:px-[12rem] py-10 sm:py-20 bg-background text-foreground">
 
   {/* Top bar */}
   <div className="flex flex-row justify-between items-center gap-4 mb-6 sm:mb-8">

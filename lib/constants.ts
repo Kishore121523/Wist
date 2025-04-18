@@ -1,12 +1,12 @@
 // Select input styles
 export const formInputStyle =
-  "w-full border border-border rounded-[6px] focus-visible:border-border focus-visible:outline-none focus-visible:ring-0 focus:outline-none focus:ring-0";
+  "w-full text-xs border border-border rounded-[6px] focus-visible:border-border focus-visible:outline-none focus-visible:ring-0 focus:outline-none focus:ring-0";
 
 export const selectItemInputStyle =
-  "cursor-pointer rounded-[6px] data-[highlighted]:bg-muted data-[highlighted]:rounded-[3px]";
+  "cursor-pointer text-xs rounded-[6px] data-[highlighted]:bg-muted data-[highlighted]:rounded-[3px]";
 
 export const selectTriggerStyle =
-  "w-full border border-border rounded-[6px] cursor-pointer focus-visible:outline-none focus-visible:ring-0 focus-visible:border-border focus:outline-none focus:ring-0";
+  "w-full text-xs border border-border rounded-[6px] cursor-pointer focus-visible:outline-none focus-visible:ring-0 focus-visible:border-border focus:outline-none focus:ring-0";
 
 // Button styles
 export const btnWhiteBg =

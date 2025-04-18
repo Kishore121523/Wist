@@ -94,64 +94,67 @@ export default function BucketListFormModal({ isOpen, onClose, existingItem }: P
   return (
     <>
       <Dialog open={isOpen} onOpenChange={handleClose}>
-        <DialogContent className="bg-card rounded-[6px] text-card-foreground max-w-lg [&>button]:hidden">
-          <DialogHeader>
-            <DialogTitle className="text-lg font-semibold">
-              {isEdit ? 'Edit WIST.' : 'Add WIST.'}
-            </DialogTitle>
-          </DialogHeader>
+        <DialogContent
+          className="bg-card rounded-[6px] text-card-foreground w-[85vw] sm:w-[95vw] max-w-lg p-4 sm:p-6 [&>button]:hidden"
+          >
+        <DialogHeader>
+          <DialogTitle className="text-lg sm:text-2xl font-semibold">
+            {isEdit ? 'Edit WIST.' : 'Add WIST.'}
+          </DialogTitle>
+        </DialogHeader>
 
-          <div className="space-y-4">
-            <Input
-              name="name"
-              value={form.name}
-              onChange={handleChange}
-              placeholder="Name"
-              className={formInputStyle}
-            />
-            <Textarea
-              name="description"
-              value={form.description}
-              onChange={handleChange}
-              placeholder="Description"
-              className={formInputStyle}
-            />
+        <div className="space-y-4">
+          <Input
+            name="name"
+            value={form.name}
+            onChange={handleChange}
+            placeholder="Name"
+            className={formInputStyle}
+          />
+          <Textarea
+            name="description"
+            value={form.description}
+            onChange={handleChange}
+            placeholder="Description"
+            className={formInputStyle}
+          />
 
-            <CategorySelect
-              value={form.category}
-              onChange={(val) => setForm({ ...form, category: val })}
-              selectItemInputStyle={selectItemInputStyle}
-              selectTriggerStyle={selectTriggerStyle}
-            />
+          <CategorySelect
+            value={form.category}
+            onChange={(val) => setForm({ ...form, category: val })}
+            selectItemInputStyle={selectItemInputStyle}
+            selectTriggerStyle={selectTriggerStyle}
+          />
 
-            <Select value={form.priority} onValueChange={handlePriorityChange}>
-              <SelectTrigger className={selectTriggerStyle}>
-                <SelectValue placeholder="Select priority" />
-              </SelectTrigger>
-              <SelectContent className="w-full border border-border rounded-[6px]">
-                <SelectItem className={selectItemInputStyle} value="Low">Low</SelectItem>
-                <SelectItem className={selectItemInputStyle} value="Medium">Medium</SelectItem>
-                <SelectItem className={selectItemInputStyle} value="High">High</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          <Select value={form.priority} onValueChange={handlePriorityChange}>
+            <SelectTrigger className={selectTriggerStyle}>
+              <SelectValue placeholder="Select priority" />
+            </SelectTrigger>
+            <SelectContent className="w-full border border-border rounded-[6px]">
+              <SelectItem className={selectItemInputStyle} value="Low">Low</SelectItem>
+              <SelectItem className={selectItemInputStyle} value="Medium">Medium</SelectItem>
+              <SelectItem className={selectItemInputStyle} value="High">High</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
-          <div className="flex justify-end gap-4">
-            <Button
-              onClick={handleClose}
-              className={btnWhiteBg}
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleSubmit}
-              className={btnWhiteBg}
-              disabled={!form.name}
-            >
-              {isEdit ? 'Update' : 'Add'}
-            </Button>
-          </div>
-        </DialogContent>
+        {/* Buttons - responsive layout */}
+        <div className="flex flex-row justify-end gap-3 sm:gap-4 mt-2 sm:mt-3">
+          <Button
+            onClick={handleClose}
+            className={btnWhiteBg}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleSubmit}
+            className={btnWhiteBg}
+            disabled={!form.name}
+          >
+            {isEdit ? 'Update' : 'Add'}
+          </Button>
+        </div>
+      </DialogContent>
       </Dialog>
 
       <ConfirmModal

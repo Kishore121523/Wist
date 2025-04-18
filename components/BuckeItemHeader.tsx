@@ -42,7 +42,7 @@ export default function BucketItemHeader({ item, onToggleComplete, disableToggle
           {disableToggle ? (
             <>
               <CheckCircle size={14} className="text-card-dark" />
-              <span className="text-[10px] sm:text-[12px] ml-1">Completed</span>
+              <span className="text-[10px] sm:text-[12px] ml-0">Completed</span>
             </>
           ) : (
             <motion.button
