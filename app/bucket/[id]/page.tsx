@@ -278,7 +278,7 @@ const heroImages = [
 
     {/* Reflections Button */}
     <div className="flex items-center gap-3">
-      <Tooltip label={item.completed ? 'Time to drop a memory' : 'Available after completion'}>
+      <Tooltip label={item.completed ? 'Time to drop a memory' : 'Available after completion'} disableMobileClick>
         <Button
           onClick={() => router.push(`/bucket/${item.id}/reflections`)}
           disabled={!item.completed}

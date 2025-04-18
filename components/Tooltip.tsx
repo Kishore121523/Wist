@@ -7,38 +7,57 @@ interface TooltipProps {
   label: string;
   label2?: string;
   sourceComp?: string;
+  disableMobileClick?: boolean; // ✅ new prop
 }
 
-export default function Tooltip({ children, label, label2, sourceComp }: TooltipProps) {
+export default function Tooltip({
+  children,
+  label,
+  label2,
+  sourceComp,
+  disableMobileClick = false,
+}: TooltipProps) {
   const [isVisible, setIsVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const tooltipRef = useRef<HTMLDivElement>(null);
 
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
-
-  // ✅ Close tooltip on outside click
+  // Detect mobile once on mount
   useEffect(() => {
-    const handleOutsideClick = (event: MouseEvent) => {
+    setIsMobile(window.innerWidth < 640);
+  }, []);
+
+  // Close on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
       if (tooltipRef.current && !tooltipRef.current.contains(event.target as Node)) {
         setIsVisible(false);
       }
     };
-    document.addEventListener('mousedown', handleOutsideClick);
-    return () => document.removeEventListener('mousedown', handleOutsideClick);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  const handleClick = () => {
+    if (isMobile && !disableMobileClick) {
+      setIsVisible((prev) => !prev);
+    }
+  };
+
+  const handleMouseEnter = () => {
+    if (!isMobile) setIsVisible(true);
+  };
+
+  const handleMouseLeave = () => {
+    if (!isMobile) setIsVisible(false);
+  };
 
   return (
     <div
       ref={tooltipRef}
       className="relative flex items-center justify-center group"
-      onClick={() => {
-        if (isMobile) setIsVisible((prev) => !prev);
-      }}
-      onMouseEnter={() => {
-        if (!isMobile) setIsVisible(true);
-      }}
-      onMouseLeave={() => {
-        if (!isMobile) setIsVisible(false);
-      }}
+      onClick={handleClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       {children}
 
@@ -55,16 +74,10 @@ export default function Tooltip({ children, label, label2, sourceComp }: Tooltip
             whitespace-nowrap break-words text-center
           `}
         >
-
-          <span className="hidden sm:inline">
+          <span>
             {label}
-            {label2 && <p>{label2}</p> }
-          </span>
-
-          <div className="block sm:hidden text-center">
-            <p>{label}</p>
             {label2 && <p>{label2}</p>}
-          </div>
+          </span>
         </div>
       )}
     </div>

@@ -32,7 +32,7 @@ export default function DateInputsWithCountdown({
 
   return (
     <div className="space-y-2 sm:space-y-4">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-[2rem] sm:gap-[6rem] mb-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-[1.5rem] sm:gap-[6rem] mb-6">
         {/* Start Date */}
         <div className="flex flex-col">
           <label className="text-sm mb-2">Expected Start Date</label>
@@ -114,7 +114,9 @@ export default function DateInputsWithCountdown({
       {start && !showStartError && (
         <div className="mt-4 w-full">
           <label className="block text-sm text-foreground mb-2">
-            Countdown to start: {totalCountdownDays} days
+            {totalCountdownDays >= 0
+              ? `Countdown to start: ${totalCountdownDays} day${totalCountdownDays === 1 ? '' : 's'}`
+              : 'Start date has passed!'}
           </label>
           <div className="h-3 bg-border rounded-full w-full overflow-hidden">
             <motion.div

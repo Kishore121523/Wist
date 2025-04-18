@@ -17,7 +17,7 @@ interface ToolbarProps {
 export default function EditorToolbar({ editor, getBtnStyle }: ToolbarProps) {
   return (
     <div className="flex flex-wrap gap-2 mb-2">
-      <Tooltip label="Bold">
+      <Tooltip label="Bold" disableMobileClick>
         <Button
           onClick={() => editor.chain().focus().toggleBold().run()}
           className={getBtnStyle(editor.isActive('bold'))}
@@ -27,7 +27,7 @@ export default function EditorToolbar({ editor, getBtnStyle }: ToolbarProps) {
         </Button>
       </Tooltip>
 
-      <Tooltip label="Italic">
+      <Tooltip label="Italic" disableMobileClick>
         <Button
           onClick={() => editor.chain().focus().toggleItalic().run()}
           className={getBtnStyle(editor.isActive('italic'))}
@@ -37,7 +37,7 @@ export default function EditorToolbar({ editor, getBtnStyle }: ToolbarProps) {
         </Button>
       </Tooltip>
 
-      <Tooltip label="Heading 1">
+      <Tooltip label="Heading 1" disableMobileClick>
         <Button
           onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
           className={getBtnStyle(editor.isActive('heading', { level: 1 }))}
@@ -47,7 +47,7 @@ export default function EditorToolbar({ editor, getBtnStyle }: ToolbarProps) {
         </Button>
       </Tooltip>
 
-      <Tooltip label="Heading 2">
+      <Tooltip label="Heading 2" disableMobileClick>
         <Button
           onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
           className={getBtnStyle(editor.isActive('heading', { level: 2 }))}
@@ -57,7 +57,7 @@ export default function EditorToolbar({ editor, getBtnStyle }: ToolbarProps) {
         </Button>
       </Tooltip>
 
-      <Tooltip label="Heading 3">
+      <Tooltip label="Heading 3" disableMobileClick>
         <Button
           onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
           className={getBtnStyle(editor.isActive('heading', { level: 3 }))}
@@ -67,7 +67,7 @@ export default function EditorToolbar({ editor, getBtnStyle }: ToolbarProps) {
         </Button>
       </Tooltip>
 
-      <Tooltip label="Left Align">
+      <Tooltip label="Left Align" disableMobileClick>
         <Button
           onClick={() => editor.chain().focus().setTextAlign('left').run()}
           className={getBtnStyle(editor.isActive({ textAlign: 'left' }))}
@@ -77,7 +77,7 @@ export default function EditorToolbar({ editor, getBtnStyle }: ToolbarProps) {
         </Button>
       </Tooltip>
 
-      <Tooltip label="Center Align">
+      <Tooltip label="Center Align" disableMobileClick>
         <Button
           onClick={() => editor.chain().focus().setTextAlign('center').run()}
           className={getBtnStyle(editor.isActive({ textAlign: 'center' }))}
@@ -87,7 +87,7 @@ export default function EditorToolbar({ editor, getBtnStyle }: ToolbarProps) {
         </Button>
       </Tooltip>
 
-      <Tooltip label="Right Align">
+      <Tooltip label="Right Align" disableMobileClick>
         <Button
           onClick={() => editor.chain().focus().setTextAlign('right').run()}
           className={getBtnStyle(editor.isActive({ textAlign: 'right' }))}
@@ -97,7 +97,7 @@ export default function EditorToolbar({ editor, getBtnStyle }: ToolbarProps) {
         </Button>
       </Tooltip>
 
-      <Tooltip label="Blockquote">
+      <Tooltip label="Blockquote" disableMobileClick>
         <Button
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
           className={getBtnStyle(editor.isActive('blockquote'))}
@@ -107,7 +107,7 @@ export default function EditorToolbar({ editor, getBtnStyle }: ToolbarProps) {
         </Button>
       </Tooltip>
 
-      <Tooltip label="Highlight">
+      <Tooltip label="Highlight" disableMobileClick>
         <Button
           onClick={() => editor.chain().focus().toggleHighlight().run()}
           className={getBtnStyle(editor.isActive('highlight'))}
@@ -117,7 +117,7 @@ export default function EditorToolbar({ editor, getBtnStyle }: ToolbarProps) {
         </Button>
       </Tooltip>
 
-      <Tooltip label="Task List">
+      <Tooltip label="Task List" disableMobileClick>
         <Button
           onClick={() => editor.chain().focus().toggleTaskList().run()}
           className={getBtnStyle(editor.isActive('taskList'))}
@@ -127,7 +127,7 @@ export default function EditorToolbar({ editor, getBtnStyle }: ToolbarProps) {
         </Button>
       </Tooltip>
 
-      <Tooltip label="Undo">
+      <Tooltip label="Undo" disableMobileClick>
         <Button
           onClick={() => editor.chain().focus().undo().run()}
           className={getBtnStyle(false)} // 'undo' doesn't have an active state
@@ -137,7 +137,7 @@ export default function EditorToolbar({ editor, getBtnStyle }: ToolbarProps) {
         </Button>
       </Tooltip>
 
-      <Tooltip label="Redo">
+      <Tooltip label="Redo" disableMobileClick>
         <Button
           onClick={() => editor.chain().focus().redo().run()}
           className={getBtnStyle(false)}
