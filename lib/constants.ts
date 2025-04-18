@@ -10,15 +10,15 @@ export const selectTriggerStyle =
 
 // Button styles
 export const btnWhiteBg =
-  "border border-foreground cursor-pointer text-foreground px-2 py-[8px] sm:px-4 sm:py-2 rounded-[6px] text-[10px] sm:text-[12px] font-medium hover:bg-card-dark hover:text-background transition";
+  "sm:h-9! border border-foreground cursor-pointer text-foreground px-2 py-[8px] sm:px-4 sm:py-2 rounded-[6px] text-[10px] sm:text-[12px] font-medium hover:bg-card-dark hover:text-background transition";
 
 export const btnBlackBg =
-  "bg-card-dark text-background px-2 py-[8px] sm:px-4 sm:py-2 rounded-[6px] text-[10px] sm:text-[12px] font-medium cursor-pointer border border-foreground hover:bg-foreground transition duration-200 ease-in-out";
+  "sm:h-9! bg-card-dark text-background px-2 py-[8px] sm:px-4 sm:py-2 rounded-[6px] text-[10px] sm:text-[12px] font-medium cursor-pointer border border-foreground hover:bg-foreground transition duration-200 ease-in-out";
 
 export const btnRedBg =
-  "border border-foreground bg-destructive text-destructive-foreground px-2 py-[8px] sm:px-4 sm:py-2 rounded-[6px] text-[10px] sm:text-[12px] font-medium hover:bg-red-500 hover:text-white hover:border-red-500 transition cursor-pointer";
+  "sm:h-9! border border-foreground bg-destructive text-destructive-foreground px-2 py-[8px] sm:px-4 sm:py-2 rounded-[6px] text-[10px] sm:text-[12px] font-medium hover:bg-red-500 hover:text-white hover:border-red-500 transition cursor-pointer";
 
 export const editorButtonStyle = (active: boolean) =>
   active
-    ? "bg-card-dark text-background cursor-pointer rounded-[6px] hover:bg-foreground hover:text-background transition"
-    : "border border-foreground-muted cursor-pointer rounded-[6px] text-foreground hover:bg-card-dark hover:text-background transition";
+    ? "sm:h-9! bg-card-dark text-background cursor-pointer rounded-[6px] hover:bg-foreground hover:text-background transition"
+    : "sm:h-9! border border-foreground-muted cursor-pointer rounded-[6px] text-foreground hover:bg-card-dark hover:text-background transition";

@@ -31,8 +31,8 @@ export default function DateInputsWithCountdown({
 
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-[6rem] mb-6">
+    <div className="space-y-2 sm:space-y-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-[2rem] sm:gap-[6rem] mb-6">
         {/* Start Date */}
         <div className="flex flex-col">
           <label className="text-sm mb-2">Expected Start Date</label>
@@ -49,7 +49,7 @@ export default function DateInputsWithCountdown({
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
                   transition={{ duration: 0.3 }}
-                  className="text-xs text-muted-foreground"
+                  className="text-[10px] sm:text-[12px] text-muted-foreground"
                 >
                   {differenceInCalendarDays(start, today) > 0
                     ? `${differenceInCalendarDays(start, today)} days to go`
@@ -62,7 +62,7 @@ export default function DateInputsWithCountdown({
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
                   transition={{ duration: 0.3 }}
-                  className="text-xs text-destructive"
+                  className="text-[10px] sm:text-[12px] text-destructive"
                 >
                   Start can’t be after end!
                 </motion.span>
@@ -87,7 +87,7 @@ export default function DateInputsWithCountdown({
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
                   transition={{ duration: 0.3 }}
-                  className="text-xs text-muted-foreground"
+                  className="text-[10px] sm:text-[12px] text-muted-foreground"
                 >
                   {differenceInCalendarDays(end, today) > 0
                     ? `${differenceInCalendarDays(end, today)} days to go`
@@ -100,7 +100,7 @@ export default function DateInputsWithCountdown({
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
                   transition={{ duration: 0.3 }}
-                  className="text-xs text-destructive"
+                  className="text-[10px] sm:text-[12px] text-destructive"
                 >
                   End can’t be before start!
                 </motion.span>
@@ -124,7 +124,7 @@ export default function DateInputsWithCountdown({
               className="h-full bg-foreground rounded-full"
             />
           </div>
-          <p className="text-xs text-muted-foreground mt-1 text-right">
+          <p className="text-[10px] sm:text-[12px] text-muted-foreground mt-1 text-right">
             {getCountdownMessage(fill)}
           </p>
         </div>

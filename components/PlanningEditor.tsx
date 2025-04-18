@@ -64,7 +64,7 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
 
       <EditorContent
         editor={editor}
-        className="tiptap min-h-[300px] h-[350px] max-h-[500px] overflow-y-auto outline-none rounded-md px-3 py-2"
+        className="tiptap min-h-[300px] h-[350px] max-h-[500px] overflow-y-auto outline-none rounded-md px-1 sm:px-3 py-1 sm:py-2"
       />
     </div>
   );

@@ -195,3 +195,45 @@
   cursor: pointer;
   accent-color: var(--foreground);
 }
+
+/* 🔽 Mobile responsive adjustments */
+@media (max-width: 640px) {
+  .tiptap h1 {
+    font-size: 1.5rem; /* down from 3xl */
+    margin-bottom: 0.5rem;
+  }
+
+  .tiptap h2 {
+    font-size: 1.25rem; /* down from 2xl */
+    margin-bottom: 0.4rem;
+  }
+
+  .tiptap h3 {
+    font-size: 1.125rem; /* down from xl */
+    margin-bottom: 0.3rem;
+  }
+
+  .tiptap p {
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .tiptap blockquote {
+    padding-left: 0.75rem;
+    font-size: 0.95rem;
+  }
+
+  .tiptap mark {
+    padding: 0.05rem 0.2rem;
+  }
+
+  .tiptap [data-type="taskList"] > li {
+    gap: 0.4rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .tiptap input[type="checkbox"] {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+}

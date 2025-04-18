@@ -24,6 +24,7 @@ import ViewToggleButton from '@/components/ToggleButton';
 import ConfirmModal from '@/components/ConfirmModal';
 import { getGreeting, containerVariants, itemVariants } from '@/lib/utils';
 import { btnBlackBg, btnWhiteBg } from '@/lib/constants';
+import { Button } from '@/components/ui/button';
 
 export default function DashboardPage() {
   const { user, loading } = useAuth();
@@ -84,17 +85,17 @@ export default function DashboardPage() {
             <p className="text-3xl sm:text-4xl text-foreground">{user?.displayName || user?.email}</p>
           </h1>
           <div className="flex flex-wrap gap-3 sm:gap-4 justify-start">
-            <button
+            <Button
               onClick={openNewItemModal}
               className={btnBlackBg}>
               Add a WIST
-            </button>
+            </Button>
 
-            <button
+            <Button
               onClick={handleSignOut}
               className={btnWhiteBg}>
               Sign Out
-            </button>
+            </Button>
           </div>
         </div>
 

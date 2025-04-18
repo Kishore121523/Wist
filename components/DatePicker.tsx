@@ -22,11 +22,11 @@ export function DatePicker({ date, onChange, placeholder = 'Pick a date' }: Date
       <PopoverTrigger asChild>
         <Button
             className={cn(
-            'w-[180px] justify-center text-center font-normal border border-card-dark rounded-[6px] hover:bg-card-dark hover:text-background transition cursor-pointer',
+            'h-9 w-[150px] sm:w-[180px] justify-center text-center text-xs sm:text-sm font-normal border border-card-dark rounded-[6px] hover:bg-card-dark hover:text-background transition cursor-pointer',
             !date && 'text-muted-foreground'
           )}
         >
-          <CalendarIcon className="" />
+          <CalendarIcon />
           {date ? format(date, 'PPP') : <span>{placeholder}</span>}
         </Button>
       </PopoverTrigger>

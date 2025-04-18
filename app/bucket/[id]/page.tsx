@@ -147,162 +147,164 @@ export default function BucketDetailPage() {
   if (!item) return <Loader />;
 
   return (
-    <div className="min-h-screen px-[10rem] py-24 bg-background text-foreground">
-      
-      {/* Top bar */}
-      <div className="flex justify-between items-center mb-8">
-        <Button
-          onClick={handleBack}
-          className={btnWhiteBg}
-        >
-          <ArrowLeft size={16} className="mr-[-3px]" />
-          Go back
-        </Button>
+    <div className="min-h-screen px-6 sm:px-8 md:px-12 lg:px-[12rem] py-12 sm:py-24 bg-background text-foreground">
 
-        <Button
-          className={btnWhiteBg}
-          onClick={() => setEditModalOpen(true)}
-        >
-          <Pencil className='mx-[-2px] h-[2px]' />Edit
-        </Button>
-      </div>
+  {/* Top bar */}
+  <div className="flex flex-row justify-between items-center gap-4 mb-6 sm:mb-8">
+    <Button
+      onClick={handleBack}
+      className={btnWhiteBg}
+    >
+      <ArrowLeft className="w-[12px] h-[12px] sm:w-[16px] sm:h-[16px] mr-[-3px]" />
+      Go back
+    </Button>
 
-      {/* List Card Details  */}
-      <div className="border border-border rounded-[8px] p-8 mb-8 bg-card-dark shadow-sm transition flex justify-between items-center">
+    <Button
+      className={btnWhiteBg}
+      onClick={() => setEditModalOpen(true)}
+    >
+      <Pencil className="mx-[-2px] w-[12px] h-[12px] sm:w-[16px] sm:h-[16px]" />
+      Edit
+    </Button>
+  </div>
 
-        <BucketItemHeader
-          item={item}
-          user={user}
-          onToggleComplete={async () => {
-            if (!user || !item.id) return;
-            await toggleCompletedBucketItem(user.uid, item.id, item.completed);
-            fetchItem(); // or refetch if needed
-          }}
-        />
+  {/* List Card Details */}
+  <div className="border border-border rounded-[8px] p-6 sm:p-8 mb-6 sm:mb-8 bg-card-dark shadow-sm transition flex justify-between items-center">
+    <BucketItemHeader
+      item={item}
+      user={user}
+      onToggleComplete={async () => {
+        if (!user || !item.id) return;
+        await toggleCompletedBucketItem(user.uid, item.id, item.completed);
+        fetchItem();
+      }}
+    />
 
-        <div className="w-[100px] h-[100px] rounded-md overflow-hidden flex items-center justify-center ml-6 mr-3">
-          <Image
-            src={randomImage}
-            alt="Hero"
-            width={100}
-            height={100}
-            className="object-contain max-w-full max-h-full"
-          />
-        </div>
-      </div>
+    <div className="hidden sm:flex w-[100px] h-[100px] rounded-md overflow-hidden items-center justify-center ml-6 mr-3">
+      <Image
+        src={randomImage}
+        alt="Hero"
+        width={100}
+        height={100}
+        className="object-contain max-w-full max-h-full"
+      />
+    </div>
+  </div>
 
-      {/* Date inputs */}
-      <div className="border border-border rounded-[8px] p-6 mb-8 bg-background shadow-sm transition">
-        <DateInputsWithCountdown
-            startDate={details.expectedStartDate}
-            endDate={details.expectedEndDate}
-            onChangeStart={(date) => setDetails({ ...details, expectedStartDate: date })}
-            onChangeEnd={(date) => setDetails({ ...details, expectedEndDate: date })}
-            />
-      </div>
+  {/* Date inputs */}
+  <div className="border border-border rounded-[8px] p-4 sm:p-6 mb-6 sm:mb-8 bg-background shadow-sm transition">
+    <DateInputsWithCountdown
+      startDate={details.expectedStartDate}
+      endDate={details.expectedEndDate}
+      onChangeStart={(date) => setDetails({ ...details, expectedStartDate: date })}
+      onChangeEnd={(date) => setDetails({ ...details, expectedEndDate: date })}
+    />
+  </div>
 
-      {/* Rich text editor */}
-      <div className="border border-border rounded-[8px] p-6 mb-6 bg-background shadow-sm transition">
-          <div className="flex justify-between items-center mb-2">
-            <label className="text-sm font-medium">Planning Notes</label>
-            {details.updatedAtPlanning && (
-              <p className="text-xs text-muted-foreground">
-                Last updated: {formatUpdatedAt(details.updatedAtPlanning)}
-              </p>
-            )}
-          </div>
-        <PlanningEditor
-          content={details.planningNotes || ''}
-          onChange={(value) => setDetails({ ...details, planningNotes: value })}
-        />
-      </div>
-      
-    {/* Save button */}
-    <div className="flex items-center justify-between gap-3">
-      <div className="flex items-center gap-3">
-        <Button
-          onClick={handleSave}
-          disabled={
-            !details.expectedStartDate ||
+  {/* Planning notes */}
+  <div className="border border-border rounded-[8px] p-4 sm:p-6 bg-background mb-6 shadow-sm transition">
+    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2 gap-1 sm:gap-2">
+      <label className="text-sm font-medium">Planning Notes</label>
+      {details.updatedAtPlanning && (
+        <p className="text-xs text-muted-foreground">
+          Last updated: {formatUpdatedAt(details.updatedAtPlanning)}
+        </p>
+      )}
+    </div>
+    <PlanningEditor
+      content={details.planningNotes || ''}
+      onChange={(value) => setDetails({ ...details, planningNotes: value })}
+    />
+  </div>
+
+  {/* Save + Reflections */}
+  <div className="flex items-center justify-between gap-3">
+    <div className="flex items-center gap-2 sm:gap-3">
+      <Button
+        onClick={handleSave}
+        disabled={
+          !details.expectedStartDate ||
+          !details.expectedEndDate ||
+          details.expectedStartDate > details.expectedEndDate || !hasUnsavedChanges
+        }
+        className={btnBlackBg}
+      >
+        Save Changes
+      </Button>
+
+      <AnimatePresence>
+        {saved ? (
+          <motion.div
+            key="check"
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.3 }}
+            className="flex items-center text-md text-foreground"
+          >
+            <CheckCircle size={18} />
+          </motion.div>
+        ) : (
+          (!details.expectedStartDate ||
             !details.expectedEndDate ||
-            details.expectedStartDate > details.expectedEndDate || !hasUnsavedChanges
-          }
+            details.expectedStartDate > details.expectedEndDate) && (
+            <motion.p
+              key="error"
+              initial={{ opacity: 0, y: -4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.3 }}
+              className="text-xs text-muted-foreground"
+            >
+              {!details.expectedStartDate || !details.expectedEndDate
+                ? 'Please select both dates.'
+                : 'Start date must be before end date.'}
+            </motion.p>
+          )
+        )}
+      </AnimatePresence>
+    </div>
+
+    {/* Reflections Button */}
+    <div className="flex items-center gap-3">
+      <Tooltip label={item.completed ? 'Time to drop a memory' : 'Available after completion'}>
+        <Button
+          onClick={() => router.push(`/bucket/${item.id}/reflections`)}
+          disabled={!item.completed}
           className={btnBlackBg}
         >
-          Save Changes
+          Reflections
+          <ArrowRight size={16} className="ml-[-3px]" />
         </Button>
-        <AnimatePresence>
-            {saved ? (
-              <motion.div
-                key="check"
-                initial={{ opacity: 0, y: -4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
-                transition={{ duration: 0.3 }}
-                className="flex items-center text-md text-foreground"
-              >
-                <CheckCircle size={18} />
-              </motion.div>
-            ) : (
-              (!details.expectedStartDate ||
-                !details.expectedEndDate ||
-                details.expectedStartDate > details.expectedEndDate) && (
-                <motion.p
-                  key="error"
-                  initial={{ opacity: 0, y: -4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -4 }}
-                  transition={{ duration: 0.3 }}
-                  className="text-xs text-muted-foreground"
-                >
-                  {!details.expectedStartDate || !details.expectedEndDate
-                    ? 'Please select both dates.'
-                    : 'Start date must be before end date.'}
-                </motion.p>
-              )
-            )}
-          </AnimatePresence>
-      </div>     
-
-      {/* Reflections */}
-      <div className="flex items-center gap-3">
-        <Tooltip label={item.completed ? 'Time to drop a memory' : 'Available after completion'}>
-          <Button
-            onClick={() => router.push(`/bucket/${item.id}/reflections`)}
-            disabled={!item.completed}
-            className={btnBlackBg}
-          >
-            Reflections 
-            <ArrowRight size={16} className="ml-[-3px]" />
-          </Button>
-        </Tooltip>
-      </div>
-      </div>
-
-      {/*  Modals */}
-      {item && (
-        <BucketListFormModal
-          isOpen={editModalOpen}
-          onClose={() => {
-            setEditModalOpen(false);
-            fetchItem();
-          }}
-          existingItem={item}
-        />
-      )}
-
-      <ConfirmModal
-        isOpen={unsavedDialogOpen}
-        onClose={() => setUnsavedDialogOpen(false)}
-        onConfirm={() => {
-          setUnsavedDialogOpen(false);
-          router.back();
-        }}
-        title="Discard unsaved changes?"
-        message="You have unsaved changes. Are you sure you want to go back? Your changes will be lost."
-        cancelLabel="Keep Editing"
-        confirmLabel="Discard Changes"
-        />
+      </Tooltip>
     </div>
+  </div>
+
+  {/* Modals */}
+  {item && (
+    <BucketListFormModal
+      isOpen={editModalOpen}
+      onClose={() => {
+        setEditModalOpen(false);
+        fetchItem();
+      }}
+      existingItem={item}
+    />
+  )}
+
+  <ConfirmModal
+    isOpen={unsavedDialogOpen}
+    onClose={() => setUnsavedDialogOpen(false)}
+    onConfirm={() => {
+      setUnsavedDialogOpen(false);
+      router.back();
+    }}
+    title="Discard unsaved changes?"
+    message="You have unsaved changes. Are you sure you want to go back? Your changes will be lost."
+    cancelLabel="Keep Editing"
+    confirmLabel="Discard Changes"
+  />
+</div>
+
   );
 }

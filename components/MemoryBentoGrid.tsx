@@ -196,7 +196,7 @@ useEffect(() => {
     <div className="space-y-6">
       <div className="flex flex-col items-start gap-3">
         <div className="flex justify-between items-center w-full">
-          <h4 className="text-xl font-semibold tracking-wide text-foreground">
+          <h4 className="text-md sm:text-2xl font-semibold tracking-wide text-foreground">
             Memories and Reflections
           </h4>
 

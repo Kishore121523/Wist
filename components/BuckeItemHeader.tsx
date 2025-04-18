@@ -8,8 +8,8 @@ import { CheckCircle } from 'lucide-react';
 interface Props {
   item: BucketItem;
   user: { uid: string } | null;
-  onToggleComplete?: () => void; // Optional now
-  disableToggle?: boolean; // Pass true on reflections page
+  onToggleComplete?: () => void; 
+  disableToggle?: boolean;
 }
 
 export default function BucketItemHeader({ item, onToggleComplete, disableToggle = false }: Props) {
@@ -17,7 +17,7 @@ export default function BucketItemHeader({ item, onToggleComplete, disableToggle
 
   return (
     <div className="opacity-90 max-w-[calc(100%-140px)]">
-      <h1 className="text-4xl font-bold text-background mb-1">
+      <h1 className="text-3xl sm:text-4xl font-bold text-background mb-1">
         {item.name || 'Untitled'}
       </h1>
 
@@ -25,12 +25,12 @@ export default function BucketItemHeader({ item, onToggleComplete, disableToggle
         {item.description || 'No description provided.'}
       </p>
 
-      <div className="flex flex-wrap gap-2 text-background">
-        <Badge className="border border-border rounded-[6px]">
+      <div className="flex items-start sm:flex-wrap gap-2 text-background">
+        <Badge className="text-[10px] sm:text-[12px] border border-border rounded-[6px]">
           {item.category?.trim() ? item.category : 'General'}
         </Badge>
 
-        <Badge className="border border-border rounded-[6px]">
+        <Badge className="text-[10px] sm:text-[12px] border border-border rounded-[6px]">
           {item.priority ? `${item.priority} Priority` : 'No Priority'}
         </Badge>
 
@@ -42,7 +42,7 @@ export default function BucketItemHeader({ item, onToggleComplete, disableToggle
           {disableToggle ? (
             <>
               <CheckCircle size={14} className="text-card-dark" />
-              <span className="text-xs ml-1">Completed</span>
+              <span className="text-[10px] sm:text-[12px] ml-1">Completed</span>
             </>
           ) : (
             <motion.button
@@ -50,7 +50,7 @@ export default function BucketItemHeader({ item, onToggleComplete, disableToggle
               whileHover={{ scale: 1.02 }}
               transition={{ type: 'spring', stiffness: 250, damping: 15 }}
               onClick={onToggleComplete}
-              className="flex items-center gap-1 text-xs cursor-pointer"
+              className="flex items-center gap-1 cursor-pointer text-[10px] sm:text-[12px]"
             >
               {completed ? (
                 <CheckCircle size={14} className="text-card-dark" />

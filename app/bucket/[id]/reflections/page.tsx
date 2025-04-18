@@ -64,7 +64,7 @@ export default function ReflectionPage() {
   if (!item) return <Loader />;
 
   return (
-    <div className="min-h-screen px-[10rem] py-24 bg-background text-foreground">
+    <div className="min-h-screen px-6 sm:px-8 md:px-12 lg:px-[12rem] py-12 sm:py-24 bg-background text-foreground">
       
       {/* Top bar */}
       <div className="flex justify-between items-center mb-8">
@@ -86,7 +86,7 @@ export default function ReflectionPage() {
           disableToggle={true}
         />
 
-        <div className="w-[100px] h-[100px] rounded-md overflow-hidden flex items-center justify-center ml-6 mr-3">
+        <div className="hidden sm:flex w-[100px] h-[100px] rounded-md overflow-hidden items-center justify-center ml-6 mr-3">
           <Image
             src={randomImage}
             alt="Hero"
@@ -98,7 +98,7 @@ export default function ReflectionPage() {
       </div>
 
       {/* Memory Upload UI */}
-      <div className="border border-border rounded-[8px] p-6 mb-6 bg-background shadow-sm transition">
+      <div className="border border-border rounded-[8px] p-4 sm:p-6 mb-6 bg-background shadow-sm transition">
         <MemoryBentoGrid
           photos={(photos || []).map(photo => ({
             ...photo,
