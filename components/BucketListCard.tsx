@@ -54,9 +54,9 @@ export default function BucketListCard({ item, user, onEdit, onDelete }: BucketL
         </p>
       </div>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap max-w-[80%] gap-2">
         {item.createdAt && (
-          <span className={`inline-flex items-center gap-1 text-[12px] px-2 py-0.5 rounded border border-gray-300 text-gray-500 
+          <span className={`inline-flex items-center gap-1 text-[10px] sm:text-[12px] px-2 py-0.5 rounded border border-gray-300 text-gray-500 
             ${item.completed ? 'line-through' : ''}`}>
             <Calendar size={12} className="text-gray-500" />
             {formatDate(item.createdAt)}

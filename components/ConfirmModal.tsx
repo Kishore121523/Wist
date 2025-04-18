@@ -34,8 +34,8 @@ export default function ConfirmModal({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className={cn(
-              'bg-card rounded-[6px] text-card-foreground [&>button]:hidden',
-              sourcePage === 'bucketListFormModal' ? 'w-[28rem]' : 'min-w-[20rem] max-w-full'
+              'bg-card rounded-[6px] text-card-foreground p-5 sm:p-6 [&>button]:hidden',
+              sourcePage === 'bucketListFormModal' ? 'w-[20rem] sm:w-[28rem]' : 'w-[22rem] sm:w-[28rem]'
             )}>
         <DialogHeader>
           <DialogTitle className="text-lg sm:text-xl text-left font-semibold">
@@ -47,7 +47,7 @@ export default function ConfirmModal({
           {message}
         </p>
 
-        <div className="flex flex-row justify-end gap-3 sm:gap-4 mt-2">
+        <div className="flex flex-row justify-end gap-3 sm:gap-4 sm:mt-2">
           <Button
             onClick={onClose}
             className={btnWhiteBg}

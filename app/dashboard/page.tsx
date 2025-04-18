@@ -79,7 +79,7 @@ export default function DashboardPage() {
       <div className="flex flex-col w-full max-w-4xl">
 
         {/* Head*/}
-    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 sm:mb-8">
+    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-4 mb-8 sm:mb-8">
           <h1 className="text-2xl sm:text-3xl font-semibold text-muted-foreground capitalize">
             {getGreeting()},
             <p className="text-3xl sm:text-4xl text-foreground">{user?.displayName || user?.email}</p>
@@ -100,14 +100,14 @@ export default function DashboardPage() {
         </div>
 
         {/* Filter */}
-        <div className="mb-6 overflow-x-auto">
+        <div className="mb-4 sm:mb-6 overflow-x-auto">
           <ToggleGroup
             type="single"
             value={filter}
             onValueChange={(val) => {
               if (val) setFilter(val as 'all' | 'favorites' | 'completed');
             }}
-            className="flex items-center justify-center gap-2 sm:gap-3"
+            className="flex items-center justify-center gap-3"
           >
               <ViewToggleButton value="all">
                 <List className="w-[12px] h-[12px] sm:w-[14px] sm:h-[14px]" />
@@ -128,7 +128,7 @@ export default function DashboardPage() {
         </div>
         
         {/* Bucket List Items */}
-      <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-3 sm:mb-3">
+      <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-4 sm:mb-3">
           Your WIST.
       </h2>
 
