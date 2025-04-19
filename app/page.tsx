@@ -55,13 +55,6 @@ export default function Home() {
   if (isInAppBrowser) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center bg-background text-foreground">
-        <Image
-          src="/assets/logoMain.svg"
-          alt="WIST Logo"
-          width={50}
-          height={50}
-          className="mb-6"
-        />
         <h1 className="text-3xl font-bold mb-2">Open in Browser</h1>
         <p className="text-muted-foreground text-sm mb-4 max-w-md">
           Google sign-in does not work inside in-app browsers like LinkedIn or Instagram.
@@ -70,13 +63,6 @@ export default function Home() {
           Tap the <strong>⋮ menu</strong> (Android) or <strong>Share icon</strong> (iOS), then choose{' '}
           <span className="font-semibold text-foreground">Open in Browser</span> to continue using WIST.
         </p>
-        <Image
-          src="/assets/open-in-browser-guide.png"
-          alt="How to open"
-          width={250}
-          height={250}
-          className="rounded-lg shadow-sm"
-        />
         <p className="text-xs text-muted-foreground mt-6">Thank you for understanding ✨</p>
       </div>
     );
