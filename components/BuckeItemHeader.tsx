@@ -16,8 +16,8 @@ export default function BucketItemHeader({ item, onToggleComplete, disableToggle
   const completed = item.completed;
 
   return (
-    <div className="opacity-90 max-w-[90%] sm:max-w-[calc(100%-140px)]">
-      <h1 className="text-3xl sm:text-4xl font-bold text-background mb-1">
+    <div className="opacity-90 max-w-[90%] sm:max-w-[calc(100%-180px)]">
+      <h1 className="text-3xl sm:text-4xl font-bold text-background mb-2">
         {item.name || 'Untitled'}
       </h1>
 
@@ -25,7 +25,7 @@ export default function BucketItemHeader({ item, onToggleComplete, disableToggle
         {item.description || 'No description provided.'}
       </p>
 
-      <div className="flex items-start sm:flex-wrap gap-2 text-background">
+      <div className="flex items-center sm:flex-wrap gap-2 text-background">
         <Badge className="text-[10px] sm:text-[12px] border border-border rounded-[6px]">
           {item.category?.trim() ? item.category : 'General'}
         </Badge>
@@ -36,12 +36,12 @@ export default function BucketItemHeader({ item, onToggleComplete, disableToggle
 
         <Badge
           className={`flex items-center justify-center border border-border rounded-[6px] ${
-            completed ? 'bg-background text-card-dark' : 'bg-card-dark text-background'
+            completed ? 'bg-background text-card-dark-2' : 'bg-card-dark-2 text-background'
           }`}
         >
           {disableToggle ? (
             <>
-              <CheckCircle size={14} className="text-card-dark" />
+              <CheckCircle size={14} className="text-card-dark-2" />
               <span className="text-[10px] sm:text-[12px] ml-0">Completed</span>
             </>
           ) : (
@@ -53,7 +53,7 @@ export default function BucketItemHeader({ item, onToggleComplete, disableToggle
               className="flex items-center gap-1 cursor-pointer text-[10px] sm:text-[12px]"
             >
               {completed ? (
-                <CheckCircle size={14} className="text-card-dark" />
+                <CheckCircle size={14} className="text-card-dark-2" />
               ) : (<></>) }
               {completed ? 'Completed' : 'Mark as Completed'}
             </motion.button>

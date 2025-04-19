@@ -10,6 +10,7 @@ import {
   listenToPrivateBucketLists,
   deletePrivateBucketItem,
 } from '@/firebase/firestore/private';
+
 import BucketListFormModal from '@/components/BucketListFormModal';
 import BucketListCard from '@/components/BucketListCard';
 import {
@@ -25,15 +26,16 @@ import ConfirmModal from '@/components/ConfirmModal';
 import { getGreeting, containerVariants, itemVariants } from '@/lib/utils';
 import { btnBlackBg, btnWhiteBg } from '@/lib/constants';
 import { Button } from '@/components/ui/button';
+import ThemeToggleBtn from '@/components/ThemeToggleBtn';
 
 export default function DashboardPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
+
   const [items, setItems] = useState<BucketItem[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<BucketItem | undefined>();
   const [confirmDeleteItem, setConfirmDeleteItem] = useState<BucketItem | null>(null);
-
   const [filter, setFilter] = useState<'all' | 'favorites' | 'completed'>('all');
 
   useEffect(() => {
@@ -78,24 +80,23 @@ export default function DashboardPage() {
     <div className="min-h-screen flex justify-center items-start px-6 sm:px-8 md:px-12 lg:px-[12rem] py-10 sm:py-20 bg-background text-foreground">
       <div className="flex flex-col w-full max-w-4xl 2xl:max-w-6xl">
 
-        {/* Head*/}
-    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-4 mb-8 sm:mb-8">
+        {/* Head */}
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-4 mb-8 sm:mb-8">
           <h1 className="text-2xl sm:text-3xl font-semibold text-muted-foreground capitalize">
             {getGreeting()},
             <p className="text-3xl sm:text-4xl text-foreground">{user?.displayName || user?.email}</p>
           </h1>
-          <div className="flex flex-wrap gap-3 sm:gap-4 justify-start">
-            <Button
-              onClick={openNewItemModal}
-              className={btnBlackBg}>
-              Add a WIST
-            </Button>
 
-            <Button
-              onClick={handleSignOut}
-              className={btnWhiteBg}>
-              Sign Out
-            </Button>
+
+          <div className="flex flex-wrap gap-3 sm:gap-4 justify-start">
+            <ThemeToggleBtn />
+              <Button onClick={openNewItemModal} className={btnBlackBg}>
+                Add a WIST
+              </Button>
+
+              <Button onClick={handleSignOut} className={btnWhiteBg}>
+                Sign Out
+              </Button>
           </div>
         </div>
 
@@ -109,78 +110,74 @@ export default function DashboardPage() {
             }}
             className="flex items-center justify-center gap-3"
           >
-              <ViewToggleButton value="all">
-                <List className="w-[12px] h-[12px] sm:w-[14px] sm:h-[14px]" />
-                All
-              </ViewToggleButton>
+            <ViewToggleButton value="all">
+              <List className="w-[12px] h-[12px] sm:w-[14px] sm:h-[14px]" />
+              All
+            </ViewToggleButton>
 
-              <ViewToggleButton value="favorites">
-                <Star className="w-[12px] h-[12px] sm:w-[14px] sm:h-[14px]" />
-                Favorites
-              </ViewToggleButton>
+            <ViewToggleButton value="favorites">
+              <Star className="w-[12px] h-[12px] sm:w-[14px] sm:h-[14px]" />
+              Favorites
+            </ViewToggleButton>
 
-              <ViewToggleButton value="completed">
-                <CheckCircle className="w-[12px] h-[12px] sm:w-[14px] sm:h-[14px]" />
-                Completed
-              </ViewToggleButton>
-
+            <ViewToggleButton value="completed">
+              <CheckCircle className="w-[12px] h-[12px] sm:w-[14px] sm:h-[14px]" />
+              Completed
+            </ViewToggleButton>
           </ToggleGroup>
         </div>
-        
-        {/* Bucket List Items */}
-      <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-4 sm:mb-3">
-          Your WIST.
-      </h2>
 
-        {/* Items */}
+        {/* Bucket List Items */}
+        <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-4 sm:mb-3">Your WIST.</h2>
+
         <AnimatePresence mode="wait">
-            {filteredItems.length > 0 ? (
-              <motion.div
-                key={filter}
-                variants={containerVariants}
-                initial="hidden"
-                animate="visible"
-                exit="hidden"
-              >
-                {filteredItems.map((item) => (
-                  <motion.div
-                    key={item.id}
-                    variants={itemVariants}
-                    initial="hidden"
-                    animate="visible"
-                    exit="exit"
-                    layout
-                  >
-                    <BucketListCard
-                      item={item}
-                      user={user}
-                      onEdit={openEditModal}
-                      onDelete={(item) => setConfirmDeleteItem(item)}
-                    />
-                  </motion.div>
-                ))}
-              </motion.div>
-            ) : (
-              <EmptyImage filter={filter} />
-            )}
+          {filteredItems.length > 0 ? (
+            <motion.div
+              key={filter}
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+            >
+              {filteredItems.map((item) => (
+                <motion.div
+                  key={item.id}
+                  variants={itemVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  layout
+                >
+                  <BucketListCard
+                    item={item}
+                    user={user}
+                    onEdit={openEditModal}
+                    onDelete={(item) => setConfirmDeleteItem(item)}
+                  />
+                </motion.div>
+              ))}
+            </motion.div>
+          ) : (
+            <EmptyImage filter={filter} />
+          )}
         </AnimatePresence>
       </div>
 
-    {/* Modals */}
-    <BucketListFormModal
+      {/* Modals */}
+      <BucketListFormModal
         isOpen={modalOpen}
         onClose={() => {
           setModalOpen(false);
           setTimeout(() => {
             setSelectedItem(undefined);
-          }, 300); 
+          }, 300);
         }}
         existingItem={selectedItem}
       />
 
       <ConfirmModal
         isOpen={!!confirmDeleteItem}
-        onClose={() => setConfirmDeleteItem(null) }
+        onClose={() => setConfirmDeleteItem(null)}
         onConfirm={handleDeleteConfirmed}
         title={`Delete “${confirmDeleteItem?.name || ''}”?`}
         message="This action cannot be undone."

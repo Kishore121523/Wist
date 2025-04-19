@@ -23,7 +23,7 @@ export default function BucketListCard({ item, user, onEdit, onDelete }: BucketL
   item.completed
     ? 'bg-muted border border-muted text-muted-foreground shadow-inner'
     : item.isFavorite
-    ? 'border-black border-1 bg-gray-70'
+    ? 'border-foreground border-1 bg-popover'
     : 'border-border border-1 bg-background hover:bg-popover'
 }`;
 
@@ -58,9 +58,9 @@ export default function BucketListCard({ item, user, onEdit, onDelete }: BucketL
 
       <div className="flex flex-wrap max-w-[80%] gap-2">
         {item.createdAt && (
-          <span className={`inline-flex items-center gap-1 text-[10px] sm:text-[12px] px-2 py-0.5 rounded border border-gray-300 text-gray-500 
+          <span className={`inline-flex items-center gap-1 text-[10px] sm:text-[12px] px-2 py-0.5 rounded border border-foreground/80 text-foreground/90 
             ${item.completed ? 'line-through' : ''}`}>
-            <Calendar size={12} className="text-gray-500" />
+            <Calendar size={12} />
             {formatDate(item.createdAt)}
           </span>
         )}
@@ -68,7 +68,7 @@ export default function BucketListCard({ item, user, onEdit, onDelete }: BucketL
         <span className={badgeColor}>
           {item.completed ? (
             <>
-              <BadgeCheck className="text-black w-[12px] h-[12px] sm:w-[14px] sm:h-[14px]" />
+              <BadgeCheck className="text-foreground w-[12px] h-[12px] sm:w-[14px] sm:h-[14px]" />
               Completed
             </>
           ) : (
@@ -107,7 +107,7 @@ export default function BucketListCard({ item, user, onEdit, onDelete }: BucketL
         }
       }}
       icon={
-        item.isFavorite ? <Star fill="card-dark" className="w-[16px] h-[16px] sm:w-[18px] sm:h-[18px]" /> : <Star className="w-[16px] h-[16px] sm:w-[18px] sm:h-[18px]" />
+        item.isFavorite ? <Star fill="currentColor" className="w-[16px] h-[16px] sm:w-[18px] sm:h-[18px]" /> : <Star className="w-[16px] h-[16px] sm:w-[18px] sm:h-[18px]" />
       }
       tooltip={item.isFavorite ? 'Unfavorite' : 'Favorite'}
       highlight={item.isFavorite}
@@ -123,7 +123,7 @@ export default function BucketListCard({ item, user, onEdit, onDelete }: BucketL
       }}
       icon={
         item.completed ? (
-          <CheckCircle className="w-[16px] h-[16px] sm:w-[18px] sm:h-[18px] text-black"/>
+          <CheckCircle className="w-[16px] h-[16px] sm:w-[18px] sm:h-[18px] text-foreground"/>
         ) : (
           <Circle className="w-[16px] h-[16px] sm:w-[18px] sm:h-[18px]" />
         )

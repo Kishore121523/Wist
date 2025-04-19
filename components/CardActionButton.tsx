@@ -20,7 +20,7 @@ export default function CardActionButton({
   ...props
 }: Props) {
   const baseStyle = `transition cursor-pointer ${
-    highlight ? 'text-card-dark' : 'text-muted-foreground hover:text-foreground'
+    highlight ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'
   }`;
 
   const button = (

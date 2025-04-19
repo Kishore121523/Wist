@@ -281,7 +281,6 @@ useEffect(() => {
                   <div className="absolute top-2 right-2 flex gap-2">
                     <Button
                       size="icon"
-                      variant="ghost"
                       className="bg-background hover:bg-card-dark hover:text-background cursor-pointer w-8 h-8 rounded-[6px] p-1"
                       onClick={() => setConfirmDeleteIndex(index)}
                     >

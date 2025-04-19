@@ -68,7 +68,7 @@ export default function Tooltip({
             right-1/2
             sm:left-1/2 sm:right-auto sm:-translate-x-1/2 
             ${sourceComp === 'cardItems' ? 'mt-2' : 'mt-1'}
-            px-3 py-1 text-[10px] rounded bg-card-dark text-white z-50
+            px-3 py-1 text-[10px] rounded bg-card-dark text-background z-50
             shadow-md pointer-events-none
             max-w-[90vw] sm:max-w-fit
             whitespace-nowrap break-words text-center

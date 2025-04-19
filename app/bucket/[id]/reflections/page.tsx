@@ -18,6 +18,7 @@ import { getRandomImage } from '@/lib/utils';
 import {  btnWhiteBg } from '@/lib/constants';
 import Image from 'next/image';
 import MemoryBentoGrid from '@/components/MemoryBentoGrid';
+import ThemeToggleBtn from '@/components/ThemeToggleBtn';
 
 export default function ReflectionPage() {
   const { user } = useAuth();
@@ -81,9 +82,13 @@ const randomImage = useMemo(() => getRandomImage(heroImages), []);
           Go back
         </Button>
 
+        <div className="flex flex-wrap gap-3 sm:gap-4 justify-start">
+
+        <ThemeToggleBtn />
         <Button onClick={() => router.push(`/dashboard`)} className={btnWhiteBg}>
           <LayoutDashboard className='mx-[-2px] h-[2px]' /> Dashboard
         </Button>
+        </div>
       </div>
 
       {/* Item Card */}
@@ -100,7 +105,7 @@ const randomImage = useMemo(() => getRandomImage(heroImages), []);
             alt="Hero"
             width={100}
             height={100}
-            className="object-contain max-w-full max-h-full"
+            className="object-contain max-w-full max-h-full dark:invert dark:contrast-80"
           />
         </div>
       </div>

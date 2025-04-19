@@ -59,15 +59,14 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col sm:flex-row justify-center items-center px-6 sm:px-12 md:px-[10rem] lg:px-[15rem] bg-background text-foreground text-center sm:text-left overflow-hidden">
-      <div className="flex flex-col justify-center items-center sm:items-start sm:pr-12">
+      <div className="flex flex-col justify-center items-center sm:items-start sm:pr-12 mt-[-3rem] sm:mt-0">
         <Image 
           src="/assets/LoginMobile.svg"
           alt="Hero Image"
           width={50}
           height={50}
-          className='mb-3 sm:hidden'
+          className='mb-[2rem] sm:hidden w-[250px] dark:invert dark:contrast-10'
         />
-
         <h1 className="text-5xl sm:text-6xl font-semibold mb-2">WIST.</h1>
         <p className="text-muted-foreground mb-4 text-[15px] sm:text-[16px]">Plan, dream, and achieve</p>
 
@@ -84,8 +83,10 @@ export default function Home() {
         alt="Divider"
         width={450}
         height={50}
-        className='hidden sm:block mx-[3rem] mb-[3rem]'
+        className='hidden sm:block mx-[3rem] mb-[3rem] dark:invert dark:contrast-100'
       />
+
+       
     </div>
   );
 }

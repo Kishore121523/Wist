@@ -22,7 +22,7 @@ export default function UnsupportedBrowserPage() {
         alt="WIST Logo"
         width={250}
         height={250}
-        className="mb-3"
+        className="mb-3 dark:invert dark:contrast-30"
       />
       <h1 className="text-3xl font-bold mb-2">Open in Browser</h1>
       <p className="text-muted-foreground text-sm mb-4 max-w-md">

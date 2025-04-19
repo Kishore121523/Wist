@@ -25,6 +25,7 @@ import { btnBlackBg, btnWhiteBg } from '@/lib/constants';
 import Tooltip from '@/components/Tooltip'; 
 import { toggleCompletedBucketItem } from '@/firebase/firestore/private';
 import BucketItemHeader from '@/components/BuckeItemHeader';
+import ThemeToggleBtn from '@/components/ThemeToggleBtn';
 
 
 export default function BucketDetailPage() {
@@ -170,17 +171,20 @@ const heroImages = [
           Go back
         </Button>
 
-        <Button
-          className={btnWhiteBg}
-          onClick={() => setEditModalOpen(true)}
-        >
-          <Pencil className="mx-[-2px] w-[12px] h-[12px] sm:w-[16px] sm:h-[16px]" />
-          Edit
-        </Button>
+        <div className="flex flex-wrap gap-3 sm:gap-4 justify-start">
+          <ThemeToggleBtn />
+          <Button
+            className={btnWhiteBg}
+            onClick={() => setEditModalOpen(true)}
+          >
+            <Pencil className="mx-[-2px] w-[12px] h-[12px] sm:w-[16px] sm:h-[16px]" />
+            Edit
+          </Button>
+        </div>
       </div>
 
       {/* List Card Details */}
-      <div className="border border-border rounded-[8px] p-6 sm:p-8 mb-6 sm:mb-8 bg-card-dark shadow-sm transition flex justify-between items-center">
+      <div className="border border-border rounded-[8px] p-6 sm:p-8 mb-6 sm:mb-8 bg-card-dark-2 shadow-sm transition flex justify-between items-center">
         <BucketItemHeader
           item={item}
           user={user}
@@ -197,7 +201,7 @@ const heroImages = [
             alt="Hero"
             width={100}
             height={100}
-            className="object-contain max-w-full max-h-full"
+            className="object-contain max-w-full max-h-full dark:invert dark:contrast-80"
           />
         </div>
       </div>

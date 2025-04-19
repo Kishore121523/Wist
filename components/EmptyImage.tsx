@@ -22,24 +22,24 @@ const EmptyImage = ({ filter }: EmptyImageProps) => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 40 }}
       transition={{ duration: 0.3, ease: 'easeOut' }}
-      className="flex flex-col items-center justify-center w-full h-[350px] text-center text-muted-foreground"
+      className="flex flex-col items-center justify-center w-full h-[370px] text-center text-muted-foreground"
     >
       <Image
-        src={getImageSrc()}
-        alt="Empty State"
-        width={270}
-        height={270}
-        className="mb-4 opacity-80"
-      />
+          src={getImageSrc()}
+          alt="Empty State"
+          width={270}
+          height={270}
+          className="mb-4 opacity-100 dark:invert dark:contrast-30 w-[200px] sm:w-[220px] md:w-[240px] lg:w-[270px] 2xl:w-[320px] h-auto"
+        />
 
-      <p className="text-lg font-medium">
+      <p className="text-md sm:text-lg font-medium">
         {filter === 'favorites'
           ? 'No favorites yet!'
           : filter === 'completed'
           ? 'Nothing completed yet!'
           : 'Looks like your list is empty!'}
       </p>
-      <p className="text-[12px]">
+      <p className="text-[10px] sm:text-[12px]">
         {filter === 'favorites'
           ? 'Mark a WIST as favorite to see it here.'
           : filter === 'completed'
