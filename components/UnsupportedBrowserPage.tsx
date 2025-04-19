@@ -33,7 +33,7 @@ export default function UnsupportedBrowserPage() {
         <span className="font-semibold text-foreground">Open in Browser</span> to continue using WIST.
       </p>
 
-      <p className="text-xs text-muted-foreground mt-6">Thank you for understanding ✨</p>
+      <p className="text-xs text-muted-foreground mt-6">Thank you for understanding.</p>
     </div>
   );
 }
