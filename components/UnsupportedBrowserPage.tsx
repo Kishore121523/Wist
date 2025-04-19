@@ -20,9 +20,9 @@ export default function UnsupportedBrowserPage() {
       <Image
         src="/assets/EmptyList.svg"
         alt="WIST Logo"
-        width={50}
-        height={50}
-        className="mb-6"
+        width={250}
+        height={250}
+        className="mb-3"
       />
       <h1 className="text-3xl font-bold mb-2">Open in Browser</h1>
       <p className="text-muted-foreground text-sm mb-4 max-w-md">
