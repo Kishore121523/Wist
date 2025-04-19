@@ -127,3 +127,20 @@ export const getPriorityBadgeStyle = (priority: string, completed: boolean) => {
   if (priority === "Medium") return "bg-card-dark/65 text-background";
   return "bg-card-dark/45 text-background";
 };
+
+export const containerVariants2 = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+// Child variant for each section
+export const itemVariants2 = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
