@@ -76,7 +76,7 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen flex justify-center items-start px-6 sm:px-8 md:px-12 lg:px-[12rem] py-10 sm:py-20 bg-background text-foreground">
-      <div className="flex flex-col w-full max-w-4xl">
+      <div className="flex flex-col w-full max-w-4xl 2xl:max-w-6xl">
 
         {/* Head*/}
     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-4 mb-8 sm:mb-8">
