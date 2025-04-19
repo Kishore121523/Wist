@@ -8,6 +8,7 @@ import { FirebaseError } from 'firebase/app';
 import { auth, provider } from '@/firebase/firebase';
 import Image from 'next/image';
 import Loader from '@/components/Loader';
+import UnsupportedBrowserPage from '@/components/UnsupportedBrowserPage';
 
 export default function Home() {
   const router = useRouter();
@@ -53,19 +54,7 @@ export default function Home() {
   }
 
   if (isInAppBrowser) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center bg-background text-foreground">
-        <h1 className="text-3xl font-bold mb-2">Open in Browser</h1>
-        <p className="text-muted-foreground text-sm mb-4 max-w-md">
-          Google sign-in does not work inside in-app browsers like LinkedIn or Instagram.
-        </p>
-        <p className="text-sm text-muted-foreground mb-6 max-w-md">
-          Tap the <strong>⋮ menu</strong> (Android) or <strong>Share icon</strong> (iOS), then choose{' '}
-          <span className="font-semibold text-foreground">Open in Browser</span> to continue using WIST.
-        </p>
-        <p className="text-xs text-muted-foreground mt-6">Thank you for understanding ✨</p>
-      </div>
-    );
+      return <UnsupportedBrowserPage />;
   }
 
   return (

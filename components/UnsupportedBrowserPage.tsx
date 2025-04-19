@@ -18,7 +18,7 @@ export default function UnsupportedBrowserPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 text-center text-foreground">
       <Image
-        src="/assets/logoMain.svg"
+        src="/assets/EmptyList.svg"
         alt="WIST Logo"
         width={50}
         height={50}
@@ -29,17 +29,9 @@ export default function UnsupportedBrowserPage() {
         Google sign-in does not work inside LinkedIn or Instagram in-app browsers for security reasons.
       </p>
       <p className="text-sm text-muted-foreground mb-6 max-w-md">
-        Tap the <strong>⋮ menu</strong> (Android) or <strong>share icon</strong> (iOS), then choose{' '}
+        Tap the <span className="font-semibold text-foreground">⋮ menu</span> (Android & iOS), then choose{' '}
         <span className="font-semibold text-foreground">Open in Browser</span> to continue using WIST.
       </p>
-
-      <Image
-        src="/assets/open-in-browser-guide.png" // 🔁 Add a mobile screenshot if you want
-        alt="Guide"
-        width={250}
-        height={250}
-        className="rounded-lg shadow-sm"
-      />
 
       <p className="text-xs text-muted-foreground mt-6">Thank you for understanding ✨</p>
     </div>
