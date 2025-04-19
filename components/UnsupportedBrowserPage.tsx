@@ -18,7 +18,7 @@ export default function UnsupportedBrowserPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 text-center text-foreground">
       <Image
-        src="/assets/EmptyList.svg"
+        src="/assets/unsupportedBrowser.svg"
         alt="WIST Logo"
         width={250}
         height={250}
