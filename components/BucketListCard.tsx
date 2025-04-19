@@ -44,11 +44,13 @@ export default function BucketListCard({ item, user, onEdit, onDelete }: BucketL
       tabIndex={0}
   >
     <div className="flex-1">
-      <h3 className={`text-xl font-semibold capitalize text-foreground cursor-pointer transition relative inline-flex items-center gap-[5px] ${item.completed ? 'line-through' : ''}`}>
-        {item.name || 'Untitled'}
-      </h3>
+      <div className="max-w-[90%]">
+        <h3 className={`text-xl font-semibold capitalize text-foreground cursor-pointer transition relative inline-flex items-center gap-[5px] ${item.completed ? 'line-through' : ''}`}>
+          {item.name || 'Untitled'}
+        </h3>
+      </div>
 
-      <div className="max-w-2xl">
+      <div className="max-w-[90%]">
         <p className={`text-[13px] leading-tight text-muted-foreground mb-3 break-words ${item.completed ? 'line-through' : ''}`}>
           {item.description || 'No description provided.'}
         </p>

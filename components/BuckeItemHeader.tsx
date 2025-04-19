@@ -16,12 +16,12 @@ export default function BucketItemHeader({ item, onToggleComplete, disableToggle
   const completed = item.completed;
 
   return (
-    <div className="opacity-90 max-w-[calc(100%-140px)]">
+    <div className="opacity-90 max-w-[90%] sm:max-w-[calc(100%-140px)]">
       <h1 className="text-3xl sm:text-4xl font-bold text-background mb-1">
         {item.name || 'Untitled'}
       </h1>
 
-      <p className="text-background mb-3 text-md break-words">
+      <p className="text-background text-[13px] mb-3 text-md break-words">
         {item.description || 'No description provided.'}
       </p>
 
