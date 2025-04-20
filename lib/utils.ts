@@ -123,9 +123,11 @@ export const formatDate = (date?: any) => {
 export const getPriorityBadgeStyle = (priority: string, completed: boolean) => {
   if (completed)
     return "border border-foreground/80 text-foreground font-medium";
-  if (priority === "High") return "bg-card-dark text-background";
-  if (priority === "Medium") return "bg-card-dark/65 text-background";
-  return "bg-card-dark/45 text-background";
+  if (priority === "High")
+    return "bg-card-dark text-background border border-card-dark";
+  if (priority === "Medium")
+    return "bg-card-dark/65 text-background border border-transparent";
+  return "bg-card-dark/45 text-background border border-transparent";
 };
 
 export const containerVariants2 = {

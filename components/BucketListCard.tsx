@@ -27,7 +27,7 @@ export default function BucketListCard({ item, user, onEdit, onDelete }: BucketL
     : 'border-border border-1 bg-background hover:bg-popover'
 }`;
 
-  const badgeColor = `inline-flex items-center gap-1 text-[10px] sm:text-[12px] px-2 py-0.5 rounded ${getPriorityBadgeStyle(item.priority, item.completed)}`;
+  const badgeColor = `inline-flex items-center gap-1 text-[10px] sm:text-[12px] px-2 py-[3px] rounded ${getPriorityBadgeStyle(item.priority, item.completed)}`;
 
   return (
     <motion.div
@@ -56,11 +56,11 @@ export default function BucketListCard({ item, user, onEdit, onDelete }: BucketL
         </p>
       </div>
 
-      <div className="flex flex-wrap max-w-[80%] gap-2">
+      <div className="flex flex-wrap items-center max-w-[80%] gap-2">
         {item.createdAt && (
-          <span className={`inline-flex items-center gap-1 text-[10px] sm:text-[12px] px-2 py-0.5 rounded border border-foreground/80 text-foreground/90 
+          <span className={`inline-flex items-center gap-1 text-[10px] sm:text-[12px] px-2 py-[3px] rounded border border-foreground/80 text-foreground/90 
             ${item.completed ? 'line-through' : ''}`}>
-            <Calendar size={12} />
+            <Calendar className="text-foreground w-[12px] h-[12px] sm:w-[14px] sm:h-[14px]" />
             {formatDate(item.createdAt)}
           </span>
         )}
@@ -78,13 +78,13 @@ export default function BucketListCard({ item, user, onEdit, onDelete }: BucketL
         
         <span>
           {item.completed && (
-            <div className={`${badgeColor} cursor-pointer hover:bg-card-dark hover:text-background transition`} onClick={(e) => {
+            <span className={`${badgeColor} cursor-pointer hover:bg-card-dark hover:text-background transition`} onClick={(e) => {
               e.stopPropagation();
               router.push(`/bucket/${item.id}/reflections`);
             }}>
-              <NotepadText className='w-[12px] h-[12px] sm:w-[14px] sm:h-[14px]' />
+              <NotepadText className="w-[12px] h-[12px] sm:w-[14px] sm:h-[14px]" />
               Reflections
-            </div>
+            </span>
           )}
         </span>
       </div>

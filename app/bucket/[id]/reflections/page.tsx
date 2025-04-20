@@ -41,6 +41,7 @@ export default function ReflectionPage() {
     '/assets/card10.svg',
     '/assets/card11.svg',
   ];
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const randomImage = useMemo(() => getRandomImage(heroImages), []);
 
   const fetchItem = async () => {
