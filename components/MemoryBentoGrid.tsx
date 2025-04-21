@@ -18,6 +18,8 @@ import AlertModal from './AlertModal';
 import ImagePreview from './imagePreview';
 import ImageWithSkeleton from './ImageWithSkeleton';
 import Image from 'next/image';
+import { ref, deleteObject } from 'firebase/storage';
+import { storage } from '@/firebase/firebase';
 
 import {
   DndContext,
@@ -176,13 +178,29 @@ useEffect(() => {
     setTimeout(() => setSaved(false), 2000); 
   };
 
-  const handleConfirmedDelete = async () => {
-    if (confirmDeleteIndex === null) return;
-    const updated = [...photos];
-    updated.splice(confirmDeleteIndex, 1);
-    await saveToFirestore(updated);
-    setConfirmDeleteIndex(null);
-  };
+ const handleConfirmedDelete = async () => {
+  if (confirmDeleteIndex === null) return;
+
+  const updated = [...photos];
+  const photoToDelete = updated[confirmDeleteIndex];
+
+  try {
+    // Create a reference to the file in Firebase Storage
+    const decodedPath = decodeURIComponent(new URL(photoToDelete.url).pathname);
+    const storagePath = decodedPath.replace(/^\/v0\/b\/[^/]+\/o\//, ''); // remove bucket info
+    const fileRef = ref(storage, storagePath);
+
+    // Delete from Storage
+    await deleteObject(fileRef);
+  } catch (err) {
+    console.error('Failed to delete image from Firebase Storage:', err);
+  }
+
+  // Remove from Firestore
+  updated.splice(confirmDeleteIndex, 1);
+  await saveToFirestore(updated);
+  setConfirmDeleteIndex(null);
+};
 
   useEffect(() => {
     if (userId && bucketId) {
