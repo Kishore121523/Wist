@@ -178,7 +178,7 @@ useEffect(() => {
     setTimeout(() => setSaved(false), 2000); 
   };
 
- const handleConfirmedDelete = async () => {
+const handleConfirmedDelete = async () => {
   if (confirmDeleteIndex === null) return;
 
   const updated = [...photos];
@@ -187,7 +187,7 @@ useEffect(() => {
   try {
     // Create a reference to the file in Firebase Storage
     const decodedPath = decodeURIComponent(new URL(photoToDelete.url).pathname);
-    const storagePath = decodedPath.replace(/^\/v0\/b\/[^/]+\/o\//, ''); // remove bucket info
+    const storagePath = decodedPath.replace(/^\/v0\/b\/[^/]+\/o\//, ''); 
     const fileRef = ref(storage, storagePath);
 
     // Delete from Storage
