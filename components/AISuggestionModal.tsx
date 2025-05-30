@@ -74,7 +74,7 @@ export default function AISuggestionModal({
         onClose();
       }
     }}>
-      <DialogContent className="max-w-lg rounded-lg border border-border bg-card text-foreground p-6 [&>button]:hidden">
+      <DialogContent className="max-w-[85vw] w-full sm:max-w-lg rounded-lg border border-border bg-card text-foreground p-6 [&>button]:hidden">
         <DialogHeader>
           <DialogTitle className="text-base font-semibold flex items-center gap-2 bg-gradient-to-r from-pink-500 via-orange-400 to-yellow-400 bg-clip-text text-transparent">
               <Sparkles size={16} className="text-pink-500" />
@@ -89,14 +89,14 @@ export default function AISuggestionModal({
             checked={useTitleCategory}
             onCheckedChange={(v: any) => setUseTitleCategory(Boolean(v))}
           />
-          <Label htmlFor="use-title-cat" className="text-sm">
+          <Label htmlFor="use-title-cat" className="text-[11px] sm:text-sm">
             Use your current title and category for context
           </Label>
         </div>
 
         {!useTitleCategory && (
           <Input
-            className="text-[12px]! focus-visible:outline-none focus-visible:ring-0 focus-visible:border-border focus:outline-none focus:ring-0"
+            className="text-[11px] sm:text-[12px]! focus-visible:outline-none focus-visible:ring-0 focus-visible:border-border focus:outline-none focus:ring-0"
             placeholder="What's in your mind?"
             value={customPrompt}
             onChange={(e) => setCustomPrompt(e.target.value)}
@@ -104,14 +104,14 @@ export default function AISuggestionModal({
         )}
 
         <Textarea
-          className="text-[12px]! focus-visible:outline-none focus-visible:ring-0 focus-visible:border-border focus:outline-none focus:ring-0"
+          className="text-[11px] sm:text-[12px]! focus-visible:outline-none focus-visible:ring-0 focus-visible:border-border focus:outline-none focus:ring-0"
           placeholder="Enter a follow-up question related to the generated plan (Optional) "
           value={userQuery}
           onChange={(e) => setUserQuery(e.target.value)}
         />
 
         <div
-          className="prose prose-sm max-w-none bg-muted text-muted-foreground text-sm p-3 rounded-md border border-border overflow-y-auto h-[160px] [&>ul]:list-disc [&>ul]:pl-5"
+          className="prose prose-sm max-w-none bg-muted text-muted-foreground text-[11px] sm:text-[12px]! p-3 rounded-md border border-border overflow-y-auto h-[160px] [&>ul]:list-disc [&>ul]:pl-5"
           dangerouslySetInnerHTML={{
             __html: suggestion.replace(/<!-- AI_START -->|<!-- AI_END -->/g, '')
           }}
