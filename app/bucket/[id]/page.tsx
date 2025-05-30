@@ -345,40 +345,27 @@ export default function BucketDetailPage() {
           confirmLabel="Discard Changes"
         />
 
-        <AISuggestionModal
-          isOpen={aiModalOpen}
-          onClose={() => setAiModalOpen(false)}
-          onInsert={(text) => {
-            setDetails((prev) => {
-              const existing = prev.planningNotes;
-          
-              const aiStart = '<!-- AI_START -->';
-              const aiEnd = '<!-- AI_END -->';
-          
-              const newAiWrapped = `${aiStart}\n${text}\n${aiEnd}`;
-          
-              let updated;
-          
-              if (existing?.includes(aiStart) && existing?.includes(aiEnd)) {
-                // Replace existing AI section
-                updated = existing?.replace(
-                  new RegExp(`${aiStart}[\\s\\S]*?${aiEnd}`),
-                  newAiWrapped
-                );
-              } else {
-                // Append AI section after manual content
-                updated = `${existing?.trim()}\n\n${newAiWrapped}`;
-              }
-          
-              return { ...prev, planningNotes: updated };
-            });
-          
-            setAiModalOpen(false);
-          }}
-          
-          title={item?.name || ''}
-          category={item?.category || ''}
-        />
+<AISuggestionModal
+  isOpen={aiModalOpen}
+  onClose={() => setAiModalOpen(false)}
+  onInsert={(text) => {
+    setDetails((prev) => {
+      const existing = prev.planningNotes || '';
+
+      const newBlock = text.trim(); 
+
+      // Append new suggestion without replacing old ones
+      const updated = `${existing.trim()}\n\n${newBlock}`;
+
+      return { ...prev, planningNotes: updated };
+    });
+
+    setAiModalOpen(false);
+  }}
+  title={item?.name || ''}
+  category={item?.category || ''}
+/>
+
       </div>
     </motion.div>
   );

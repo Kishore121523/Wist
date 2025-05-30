@@ -34,7 +34,7 @@ export default function AISuggestionModal({
   const [loading, setLoading] = useState(false);
   const [suggestion, setSuggestion] = useState('');
   const [userQuery, setUserQuery] = useState('');
-  const [useTitleCategory, setUseTitleCategory] = useState(true);
+  const [useTitleCategory, setUseTitleCategory] = useState(false);
   const [customPrompt, setCustomPrompt] = useState('');
 
   const resetFields = () => {
@@ -119,7 +119,6 @@ export default function AISuggestionModal({
 
         <div className="flex justify-end gap-2 mt-2">
             <Button className={btnWhiteBg} onClick={() => {
-                  onInsert(suggestion);
                   resetFields();           
                   onClose();                
                 }}>
@@ -134,8 +133,8 @@ export default function AISuggestionModal({
             </div>
               
               <Button onClick={() => {
-                  onInsert(suggestion);
-                  resetFields();           
+                onInsert(`<!-- AI_START -->\n${suggestion.trim()}\n<!-- AI_END -->`);
+                resetFields();           
                   onClose();                
                 }}
                 className={btnWhiteBg}
