@@ -32,6 +32,7 @@ import { toggleCompletedBucketItem } from '@/firebase/firestore/private';
 import BucketItemHeader from '@/components/BuckeItemHeader';
 import ThemeToggleBtn from '@/components/ThemeToggleBtn';
 import AISuggestionModal from '@/components/AISuggestionModal';
+import { getUserUsage } from '@/firebase/firestore/aiUsage';
 
 export default function BucketDetailPage() {
   const { user } = useAuth();
@@ -40,6 +41,19 @@ export default function BucketDetailPage() {
 
   const [saved, setSaved] = useState(false);
   const [item, setItem] = useState<BucketItem | null>(null);
+
+  // Get daily use count for OpenAI
+  const [usedCount, setUsedCount] = useState<number>(0);
+  useEffect(() => {
+    const fetchUsage = async () => {
+      if (!user) return;
+      const data = await getUserUsage(user.uid);
+      setUsedCount(data.count || 0);
+    };
+  
+    fetchUsage();
+  }, [user]);
+
   const [details, setDetails] = useState<BucketItemDetails>({
     planningNotes: '',
     expectedStartDate: undefined,
@@ -68,6 +82,7 @@ export default function BucketDetailPage() {
     '/assets/card11.svg',
   ];
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const randomImage = useMemo(() => getRandomImage(heroImages), []);
 
   const fetchItem = async () => {
@@ -113,6 +128,7 @@ export default function BucketDetailPage() {
   useEffect(() => {
     fetchItem();
     fetchDetails();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, id]);
 
   const handleSave = async () => {
@@ -345,26 +361,28 @@ export default function BucketDetailPage() {
           confirmLabel="Discard Changes"
         />
 
-<AISuggestionModal
-  isOpen={aiModalOpen}
-  onClose={() => setAiModalOpen(false)}
-  onInsert={(text) => {
-    setDetails((prev) => {
-      const existing = prev.planningNotes || '';
+      <AISuggestionModal
+        isOpen={aiModalOpen}
+        onClose={() => setAiModalOpen(false)}
+        usageCount={usedCount || 0} 
+        setUsedCount={setUsedCount}
+        onInsert={(text) => {
+          setDetails((prev) => {
+            const existing = prev.planningNotes || '';
 
-      const newBlock = text.trim(); 
+            const newBlock = text.trim(); 
 
-      // Append new suggestion without replacing old ones
-      const updated = `${existing.trim()}\n\n${newBlock}`;
+            // Append new suggestion without replacing old ones
+            const updated = `${existing.trim()}\n\n${newBlock}`;
 
-      return { ...prev, planningNotes: updated };
-    });
+            return { ...prev, planningNotes: updated };
+          });
 
-    setAiModalOpen(false);
-  }}
-  title={item?.name || ''}
-  category={item?.category || ''}
-/>
+          setAiModalOpen(false);
+        }}
+        title={item?.name || ''}
+        category={item?.category || ''}
+      />
 
       </div>
     </motion.div>
